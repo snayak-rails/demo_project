@@ -1,4 +1,10 @@
 class UsersController < ApplicationController
+
+  before_action :authorize
+
+  def index
+    @users = User.all
+  end
   
   def new
     @user = User.new
@@ -9,9 +15,9 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to '/users'
+      redirect_to users_path
     else
-      redirect_to '/signup'
+      redirect_to new_user_path
     end
   end
 
