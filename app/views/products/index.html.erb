@@ -1,0 +1,29 @@
+<h1> Products upcoming! </h1>
+<br>
+
+<% if !(session[:user_id].present?) %>
+  <%= button_to "Login", '/login', :id => "login-button", :method => :get %>
+  <br>
+  <%= button_to "Signup", new_user_path, :id => "signup-button", :method => :get %>
+  <br>
+<% else %>
+  <%= button_to "Logout", '/logout', :id => "logout-button", :method => :get %>
+  <br>
+<% end %>
+
+<table>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.user_id %></td>
+        <td><%= product.title %></td>
+        <td><%= product.category %></td>
+        <td><%= product.description %></td>
+        <td><%= product.price %></td>
+      </tr>
+      <br>
+    <% end %>
+  </tbody>
+
+</table>

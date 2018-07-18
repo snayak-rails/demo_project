@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authorize
+  #before_action :authorize
 
   def index
     @users = User.all
@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to users_path
+      redirect_to products_path
     else
       redirect_to new_user_path
     end
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :gender, :email, :contact, :role, :password, :password_confirmation)
   end
 
 end

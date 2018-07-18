@@ -4,11 +4,15 @@
 
   Name: <%= f.text_field :name %>
   <br>
+  Gender: <%= f.text_field :gender %>
+  <br>
   Email: <%= f.text_field :email %>
   <br>
-  Password: <%= f.password_field :password %>
+  Contact: <%= f.number_field :contact %>
   <br>
-  Password Confirmation: <%= f.password_field :password_confirmation %>
+  Role: <%= f.text_field :role %>
+  <br>
+  Password: <%= f.password_field :password %>
   <br>
   <%= f.submit "Submit" %>
 
