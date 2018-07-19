@@ -1,15 +1,29 @@
-<h1> Products upcoming! </h1>
+<h1> Products list! </h1>
 <br>
 
 <% if !(session[:user_id].present?) %>
+
   <%= button_to "Login", '/login', :id => "login-button", :method => :get %>
   <br>
   <%= button_to "Signup", new_user_path, :id => "signup-button", :method => :get %>
   <br>
+
 <% else %>
+
+  <i> <%= "You are logged in as " + current_user.email %> <br> <i>
+
+  <br> 
   <%= button_to "Logout", '/logout', :id => "logout-button", :method => :get %>
   <br>
+  <% if current_user.role == "seller" %>
+    <br>
+    <%= button_to "Add product", new_product_path, :id => "add-product-button", :method => :get %>
+    <br>
+  <% end %>
+
 <% end %>
+
+<%= flash[:notice] %>
 
 <table>
 
@@ -21,6 +35,8 @@
         <td><%= product.category %></td>
         <td><%= product.description %></td>
         <td><%= product.price %></td>
+        <td><%= button_to "show", product_path(product.id), :id => "show-product-button", :method => :get %><td>
+        <td><%= button_to "delete", product_path(product.id), :id => "delete-product-button", :method => :delete %><td>
       </tr>
       <br>
     <% end %>

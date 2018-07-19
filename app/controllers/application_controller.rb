@@ -12,11 +12,6 @@ class ApplicationController < ActionController::Base
   end
 
   def start
-    #if current_user
-    #  redirect_to products_path
-    #else
-    #  redirect_to '/login'
-    #end
     redirect_to products_path
   end
   

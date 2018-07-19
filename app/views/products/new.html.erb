@@ -1,7 +1,7 @@
 <h1>Add a product</h1>
 <br>
 
-<%= form_for :product, url: products_path do |f| %>
+<%= form_for(@product, :html => { :multipart => true }) do |f| %>
 
   Title: <%= f.text_field :title %>
   <br>
@@ -11,6 +11,17 @@
   <br>
   Price: <%= f.number_field :price, step: :any %>
   <br>
-  <%= f.submit "Add Product" %>
+
+  <%= f.fields_for :product_images do |p| %>
+    <div class="field">
+      <%= p.label :image %><br>
+      <%= p.file_field :image, :multiple => true, name: "product_images[image][]" %>
+    </div>
+  <% end %>
+
+  <%= f.submit "Done" %><br>
+
+  <br>
+  <em><%= flash[:notice] %><em>
 
 <% end %>
