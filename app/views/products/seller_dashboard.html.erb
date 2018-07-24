@@ -1,0 +1,31 @@
+<%= button_to "Add product", new_product_path,
+    :id => "add-product-button", :method => :get %>
+
+<br>
+<%= flash[:notice] %>
+
+<table>
+
+  <tbody>
+    <% @seller_products.each do |product| %>
+      <tr>
+        <td><%= product.user_id %></td>
+        <td><%= product.title %></td>
+        <td><%= product.category %></td>
+        <td><%= product.description %></td>
+        <td><%= product.price %></td>
+
+        <td><%= button_to "show", product_path(product.id),
+               :id => "show-product-button", :method => :get %><td>
+
+        <td><%= button_to "delete", product_path(product.id),
+               :id => "delete-product-button", :method => :delete %><td>
+
+        <td><%= button_to "edit", edit_product_path(product.id),
+               :id => "edit-product-button", :method => :get %><td>
+      </tr>
+      <br>
+    <% end %>
+  </tbody>
+
+</table>

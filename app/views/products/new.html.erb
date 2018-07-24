@@ -1,27 +1,8 @@
 <h1>Add a product</h1>
 <br>
 
-<%= form_for(@product, :html => { :multipart => true }) do |f| %>
+<% provide(:button_text, "Add Product") %>
 
-  Title: <%= f.text_field :title %>
-  <br>
-  Category: <%= f.text_field :category %>
-  <br>
-  Description: <%= f.text_field :description %>
-  <br>
-  Price: <%= f.number_field :price, step: :any %>
-  <br>
+<% provide(:multi_option, true) %>
 
-  <%= f.fields_for :product_images do |p| %>
-    <div class="field">
-      <%= p.label :image %><br>
-      <%= p.file_field :image, :multiple => true, name: "product_images[image][]" %>
-    </div>
-  <% end %>
-
-  <%= f.submit "Done" %><br>
-
-  <br>
-  <em><%= flash[:notice] %><em>
-
-<% end %>
+<%= render 'form' %>

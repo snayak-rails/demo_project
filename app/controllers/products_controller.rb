@@ -1,13 +1,16 @@
 class ProductsController < ApplicationController
+  before_action :fetch_product,
+                except: %i[index new create seller_dashboard]
 
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  # rescue_from ActionController::RoutingError, :with => :not_found
 
   def index
+    # session[:user_id] = nil
     @products = Product.all
   end
 
   def show
-    @product_images = @product.product_images.all 
+    @product_images
   end
 
   def new
@@ -17,42 +20,66 @@ class ProductsController < ApplicationController
 
   def create
     @product = current_user.products.new(product_params)
-    #binding pry
     respond_to do |format|
       if @product.save
         params[:product_images]['image'].each do |a|
-          @product_images = @product.product_images.create!(:image => a, :product_id => @product.id)
-          #binding pry
-      end
-        format.html { redirect_to new_product_path, notice: "Product added successfully!" }
+          @product_images = @product.product_images
+          @product_images.create!(image: a, product_id: @product.id)
+        end
+        format.html { redirect_to '/seller_dashboard', notice: 'Product added!' }
       else
-        format.html { redirect_to new_product_path, notice: "Attempt unsucessful."}
+        format.html { redirect_to '/seller_dashboard', notice: 'Attempt failed!' }
       end
     end
+  end
 
+  def edit
+  end
+
+  def update
+    if @product.update_attributes(product_params)
+      image_params = params[:product_images]['image']
+      @product_images.zip(image_params).each do |product_image, p|
+        product_image.update(image: p, product_id: @product.id)
+      end
+      redirect_to '/seller_dashboard'
+    else
+      render :edit
+    end
   end
 
   def destroy
-
-    @product.product_images.all.each do |product_image|
-      product_image.remove_image!
-    end
-    #binding pry
+    destroy_product_images
     @product.destroy
-
     respond_to do |format|
-      format.html { redirect_to products_path, notice: "Product removed" }
+      format.html { redirect_to '/seller_dashboard', notice: 'Product removed' }
     end
+  end
+
+  def seller_dashboard
+    @seller_products = current_user.products.all
   end
 
   private
 
   def product_params
-    params.require(:product).permit(:title, :category, :description, :price, product_images_attributes: [:id, :image, :product_id])
+    image = { product_images_attributes: %i[id image product_id] }
+    params.require(:product)
+          .permit(:title, :category, :description, :price, image)
   end
 
-  def set_product
-    @product = Product.find(params[:id])
+  def fetch_product
+    begin
+      @product = Product.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      flash[:notice] = e.message
+      redirect_to products_path
+      return
+    end
+    @product_images = @product.product_images.all
   end
 
+  def destroy_product_images
+    @product_images.each(&:remove_image!)
+  end
 end
