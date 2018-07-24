@@ -17,6 +17,7 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       redirect_to products_path
     else
+      flash[:error] = @user.errors.full_messages.join('<br>')
       redirect_to new_user_path
     end
   end

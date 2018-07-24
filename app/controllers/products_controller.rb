@@ -1,6 +1,8 @@
 class ProductsController < ApplicationController
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard]
+  before_action :verify_seller,
+                except: %i[index show]
 
   # rescue_from ActionController::RoutingError, :with => :not_found
 
@@ -61,6 +63,13 @@ class ProductsController < ApplicationController
   end
 
   private
+
+  def verify_seller
+    unless current_user.role == 'seller'
+      flash[:notice] = 'You need a seller account to access a seller dashboard.'
+      redirect_to '/login'
+    end
+  end
 
   def product_params
     image = { product_images_attributes: %i[id image product_id] }

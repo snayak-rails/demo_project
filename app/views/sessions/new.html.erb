@@ -7,9 +7,9 @@
   <%= submit_tag "Login" %>
 
 <% end %>
-
 <br>
-
 <%= button_to "Signup", new_user_path,
       :id => "signup-button", :method => :get %>
+<br>
+<%= flash[:notice]%>
 

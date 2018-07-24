@@ -2,13 +2,13 @@
 
   Name: <%= f.text_field :name %>
   <br>
-  Gender: <%= f.text_field :gender %>
+  Gender: <%= f.select :gender, options_for_select(["male", "female", "other"]) %>
   <br>
   Email: <%= f.text_field :email %>
   <br>
   Contact: <%= f.number_field :contact %>
   <br>
-  Role: <%= f.text_field :role %>
+  Role: <%= f.select :role, options_for_select(["seller", "buyer"]) %>
   <br>
   Password: <%= f.password_field :password %>
   <br>
