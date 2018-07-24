@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard]
-  before_action :verify_seller,
+  before_action :user_logged_in?, :verify_seller,
                 except: %i[index show]
 
   # rescue_from ActionController::RoutingError, :with => :not_found
@@ -69,6 +69,10 @@ class ProductsController < ApplicationController
       flash[:notice] = 'You need a seller account to access a seller dashboard.'
       redirect_to '/login'
     end
+  end
+
+  def user_logged_in?
+    redirect_to '/login' if session[:user_id].nil?
   end
 
   def product_params
