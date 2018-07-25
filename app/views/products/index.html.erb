@@ -1,7 +1,7 @@
 <h1> Products list! </h1>
 <br>
 
-<% if !(session[:user_id].present?) %>
+<% if !(current_user.present?) %>
 
   <%= button_to "Login", '/login',
       :id => "login-button", :method => :get %>

@@ -1,4 +1,6 @@
 class ProductsController < ApplicationController
+  include ApplicationHelper
+  include ProductsHelper
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard]
   before_action :user_logged_in?, :verify_seller,
@@ -12,7 +14,6 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product_images
   end
 
   def new
@@ -79,17 +80,6 @@ class ProductsController < ApplicationController
     image = { product_images_attributes: %i[id image product_id] }
     params.require(:product)
           .permit(:title, :category, :description, :price, image)
-  end
-
-  def fetch_product
-    begin
-      @product = Product.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      flash[:notice] = e.message
-      redirect_to products_path
-      return
-    end
-    @product_images = @product.product_images.all
   end
 
   def destroy_product_images

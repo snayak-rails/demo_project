@@ -1,3 +1,19 @@
-<% @product_images.each do |product_image| %>
-  <%= image_tag((product_image.image).url) %>
-<% end %>
+<table>
+
+  <% @product_images.each do |product_image| %>
+    <%= image_tag((product_image.image).url) %>
+  <% end %>
+  <br><br>
+
+  <tbody>
+    <%= "Title: " + @product.title %><br>
+    <%= "Category: " + @product.category %><br>
+    <%= "Description: " + @product.description %><br>
+    <%= "Price: " + @product.price.to_s %><br>
+  </tbody>
+
+  <%= button_to "Add to Cart",
+       create_cart_item_cart_item_path(product_id: @product.id, price: @product.price),
+       :id => "add-to-cart-button", :method => :post%>
+
+</table>
