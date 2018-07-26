@@ -1,6 +1,6 @@
 class Product < ApplicationRecord
   belongs_to :user
-  has_many :cart_items, dependent: :destroy
+  has_many :cart_items
   has_many :product_images, dependent: :destroy
 
   validates :title, presence: true

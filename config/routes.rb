@@ -2,12 +2,11 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :users
   resources :products
-  resources :carts
-  resources :cart_items
 
-  resources :cart_items do
+  resources :cart_checkout do
     member do
-      post :create_cart_item
+      post :add_to_cart
+      put :update_cart_item
     end
   end
 

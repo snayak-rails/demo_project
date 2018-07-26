@@ -33,8 +33,16 @@
 
 <%= flash[:notice] %>
 
-<table>
-
+<table border=1>
+  <thead>
+    <tr>
+      <th>User_id: </th>
+      <th>Title: </th>
+      <th>Category: </th>
+      <th>Description: </th>
+      <th>Price: </th>
+    </tr>
+  </thead>
   <tbody>
     <% @products.each do |product| %>
       <tr>
@@ -50,5 +58,4 @@
       <br>
     <% end %>
   </tbody>
-
 </table>
