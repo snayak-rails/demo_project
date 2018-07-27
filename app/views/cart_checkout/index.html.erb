@@ -1,5 +1,7 @@
 <h1>Cart</h1>
 
+<%= flash[:notice] %>
+
 <table border=1>
   <thead>
     <tr>
@@ -19,7 +21,19 @@
           <%= number_field_tag :updated_quantity, nil, required: true %>
           <%= submit_tag 'Save'%>
         <% end %></td>
+        <td><%= button_to "Remove item",
+                destroy_cart_item_cart_checkout_path(cart_item.id),
+                :id => "remove-cart-item-button", :method => :delete %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<br>
+<%= button_to "Purchase", purchase_cart_checkout_index_path,
+    :id => "purchase-cart-button", :method => :get %>
+
+<%= button_to "Order history", order_history_cart_checkout_index_path,
+    :id => "order-history-button", :method => :get %>
+
+

@@ -13,11 +13,11 @@
 </table>
 
 <%= button_to "Add to Cart",
-    add_to_cart_cart_checkout_path(title: @product.title,
+    add_to_cart_cart_checkout_index_path(title: @product.title,
     product_id: @product.id, price: @product.price),
     :id => "add-to-cart-button", :method => :post%>
 
-<%= button_to "Cart", new_cart_checkout_path,
+<%= button_to "Cart", cart_checkout_index_path,
     :id => "cart-button", :method => :get%>
 
 <%= flash[:notice] %>

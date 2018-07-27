@@ -40,11 +40,11 @@ class ProductsController < ApplicationController
   end
 
   def update
+    # binding pry
     if @product.update_attributes(product_params)
       image_params = params[:product_images]['image']
-      @product_images.zip(image_params).each do |product_image, p|
-        product_image.update(image: p, product_id: @product.id)
-      end
+      update_product_images(image_params)
+      update_cart_items(product_params)
       redirect_to '/seller_dashboard'
     else
       render :edit
@@ -53,6 +53,7 @@ class ProductsController < ApplicationController
 
   def destroy
     destroy_product_images
+    destroy_cart_items
     @product.destroy
     respond_to do |format|
       format.html { redirect_to '/seller_dashboard', notice: 'Product removed' }
@@ -65,15 +66,27 @@ class ProductsController < ApplicationController
 
   private
 
+  def update_product_images(image_params)
+    @product_images.zip(image_params).each do |product_image, p|
+      product_image.update(image: p, product_id: @product.id)
+    end
+  end
+
+  def update_cart_items(product_params)
+    title = product_params[:title]
+    price = product_params[:price]
+    cart_items = CartItem.where('product_id = ?', @product.id)
+    return if cart_items.blank?
+    cart_items.each do |cart_item|
+      cart_item.update(title: title, price: price)
+    end
+  end
+
   def verify_seller
     unless current_user.role == 'seller'
       flash[:notice] = 'You need a seller account to access a seller dashboard.'
       redirect_to '/login'
     end
-  end
-
-  def user_logged_in?
-    redirect_to '/login' if session[:user_id].nil?
   end
 
   def product_params
@@ -84,5 +97,11 @@ class ProductsController < ApplicationController
 
   def destroy_product_images
     @product_images.each(&:remove_image!)
+  end
+
+  def destroy_cart_items
+    cart_items = CartItem.where('product_id = ?', @product.id)
+    return if cart_items.blank?
+    cart_items.destroy_all
   end
 end

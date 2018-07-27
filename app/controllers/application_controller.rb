@@ -11,9 +11,9 @@ class ApplicationController < ActionController::Base
     redirect_to products_path
   end
 
-  # def not_found
-  #  raise ActionController::RoutingError.new('Not Found')
-  # rescue ActionController::RoutingError
-  #  render file: 'public/404.html', status: 404
-  # end
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  rescue ActionController::RoutingError
+    render file: 'public/404.html', status: 404
+  end
 end

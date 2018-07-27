@@ -3,10 +3,15 @@ Rails.application.routes.draw do
   resources :users
   resources :products
 
-  resources :cart_checkout do
+  resources :cart_checkout, except: %i[show new create] do
     member do
-      post :add_to_cart
       put :update_cart_item
+      delete :destroy_cart_item
+    end
+    collection do
+      post :add_to_cart
+      get :purchase
+      get :order_history
     end
   end
 
@@ -18,5 +23,5 @@ Rails.application.routes.draw do
 
   get '/seller_dashboard' => 'products#seller_dashboard'
 
-  get '*path' => 'products#index'
+  get '*path' => 'application#not_found'
 end

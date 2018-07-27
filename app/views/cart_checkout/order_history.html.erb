@@ -1,0 +1,21 @@
+<h1>Order history</h1>
+
+<% @user_carts.each do |cart| %>
+
+  <% cart.cart_items.each do |cart_item| %>
+    <%= cart_item.title %><br>
+    <%= 'Quantity: ' + cart_item.quantity.to_s %><br>
+    <%= 'Price: ' + (cart_item.price * cart_item.quantity).round(2).to_s %><br><br>
+  <% end %>
+
+  <%= 'Delivered to : ' + cart.name %><br>
+  <%= 'Contact: ' + cart.contact %><br>
+  <%= 'Email: ' + cart.email %><br>
+  <%= 'Address1: ' + cart.address1 %><br>
+  <%= 'City: ' + cart.city %><br>
+  <%= 'State: ' + cart.state %><br>
+  <%= 'Country: ' + cart.country %><br>
+  <%= 'Total Amount: ' + cart.total_amount.to_s %><br><br>
+  <%= '-----------------------------------------------------------------------' %><br>
+<% end %>
+
