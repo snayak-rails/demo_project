@@ -1,10 +1,8 @@
 class UsersController < ApplicationController
-  # before_action :authorize
-  before_action :set_user, only: %i[show edit update destroy]
+  include ApplicationHelper
 
-  def index
-    @users = User.all
-  end
+  before_action :authorize_user, except: %i[new create]
+  before_action :fetch_user, except: %i[new create]
 
   def new
     @user = User.new
@@ -15,10 +13,10 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to products_path
+      redirect_to products_url
     else
       flash[:error] = @user.errors.full_messages.join('<br>')
-      redirect_to new_user_path
+      redirect_to new_user_url
     end
   end
 
@@ -27,7 +25,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update_attributes(user_params)
-      redirect_to products_path
+      redirect_to products_url
     else
       render :edit
     end
@@ -36,10 +34,14 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :gender, :email, :contact, :role, :password)
+    params.require(:user).permit(:name, :gender, :email, :contact, :role,
+                                 :password)
   end
 
-  def set_user
+  def fetch_user
     @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:notice] = e.message
+    redirect_to products_url
   end
 end

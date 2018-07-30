@@ -1,7 +1,7 @@
 class CartCheckoutController < ApplicationController
   include ApplicationHelper
 
-  before_action :user_logged_in?, :fetch_cart
+  before_action :authorize_user, :fetch_cart
   before_action :fetch_cart_item, only: %i[update_cart_item destroy_cart_item]
 
   def index
@@ -25,29 +25,26 @@ class CartCheckoutController < ApplicationController
   end
 
   def purchase
-    # binding pry
     @cart_items = @cart.cart_items.all
-    if @cart_items.blank?
-      flash[:notice] = 'Your cart is empty.'
-      redirect_to cart_checkout_index_path
-    end
+    return unless @cart_items.blank?
+    flash[:notice] = 'Your cart is empty.'
+    redirect_to cart_checkout_index_url
   end
 
   def update
-    # binding pry
     begin
       @cart.update!(purchase_params)
       flash[:notice] = 'Order confirmed!'
     rescue ActiveRecord::RecordInvalid => e
       flash[:notice] = e.record.errors.full_messages.join('<br>')
     end
-    redirect_to cart_checkout_index_path
+    redirect_to cart_checkout_index_url
   end
 
   def create_cart_item
     @cart_item = CartItem.new(cart_item_params)
     if @cart_item.save
-      redirect_to cart_checkout_index_path
+      redirect_to cart_checkout_index_url
     else
       flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     end
@@ -58,19 +55,17 @@ class CartCheckoutController < ApplicationController
       @cart_item.update!(quantity: params[:updated_quantity])
     rescue ActiveRecord::RecordInvalid => e
       flash[:notice] = e.record.errors.full_messages.join('<br>')
-      # redirect_to cart_checkout_index_path
     end
-    redirect_to cart_checkout_index_path
+    redirect_to cart_checkout_index_url
   end
 
   def destroy_cart_item
-    redirect_to cart_checkout_index_path if @cart_item.destroy
+    redirect_to cart_checkout_index_url if @cart_item.destroy
     flash[:notice] = @cart_item.errors.full_messages.join('<br>')
   end
 
   def destroy
-    unless @cart.destroy! flash[:notice] = @cart.errors.full_messages.join('<br>')
-    end
+    flash[:notice] = @cart.errors.full_messages.join('<br>') unless @cart.destroy
   end
 
   private
@@ -103,21 +98,5 @@ class CartCheckoutController < ApplicationController
   rescue StandardError
     flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     redirect_to product_path(params[:product_id])
-  end
-
-  def fetch_cart
-    @cart = Cart.where('user_id = ? AND is_paid = ?',
-                       current_user.id, false).take
-    @cart.nil? ? create_cart : session[:cart_id] = @cart.id
-  end
-
-  def create_cart
-    @cart = current_user.carts.new(is_paid: false)
-    if @cart.save(validate: false)
-      session[:cart_id] = @cart.id
-      @cart
-    else
-      flash.now[:notice] = @cart.errors.full_messages.join('<br>')
-    end
   end
 end

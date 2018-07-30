@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :users
+  root 'application#start'
+
+  resources :users, except: %i[index]
   resources :products
 
   resources :cart_checkout, except: %i[show new create] do
@@ -14,8 +16,6 @@ Rails.application.routes.draw do
       get :order_history
     end
   end
-
-  root 'application#start'
 
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'

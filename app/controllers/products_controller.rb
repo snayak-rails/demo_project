@@ -1,15 +1,15 @@
 class ProductsController < ApplicationController
   include ApplicationHelper
-  include ProductsHelper
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard]
-  before_action :user_logged_in?, :verify_seller,
+  before_action :authorize_user, :authorize_seller,
                 except: %i[index show]
 
-  # rescue_from ActionController::RoutingError, :with => :not_found
+  after_action :destroy_product_images, :destroy_cart_items, only: %i[destroy]
+
+  ROLE_SELLER = 'seller'.freeze
 
   def index
-    # session[:user_id] = nil
     @products = Product.all
   end
 
@@ -23,41 +23,34 @@ class ProductsController < ApplicationController
 
   def create
     @product = current_user.products.new(product_params)
-    respond_to do |format|
-      if @product.save
-        params[:product_images]['image'].each do |a|
-          @product_images = @product.product_images
-          @product_images.create!(image: a, product_id: @product.id)
-        end
-        format.html { redirect_to '/seller_dashboard', notice: 'Product added!' }
-      else
-        format.html { redirect_to '/seller_dashboard', notice: 'Attempt failed!' }
+    if @product.save
+      params[:product_images]['image'].each do |a|
+        @product.product_images.create!(image: a, product_id: @product.id)
       end
+      flash[:notice] = 'Product added!'
+    else
+      flash[:notice] = 'Attempt failed.'
     end
+    redirect_to seller_dashboard_url
   end
 
   def edit
   end
 
   def update
-    # binding pry
     if @product.update_attributes(product_params)
       image_params = params[:product_images]['image']
       update_product_images(image_params)
       update_cart_items(product_params)
-      redirect_to '/seller_dashboard'
+      redirect_to seller_dashboard_url
     else
       render :edit
     end
   end
 
   def destroy
-    destroy_product_images
-    destroy_cart_items
-    @product.destroy
-    respond_to do |format|
-      format.html { redirect_to '/seller_dashboard', notice: 'Product removed' }
-    end
+    @product.destroy ? flash[:notice] = 'Product removed' : flash[:notice] = 'Attempt failed'
+    redirect_to seller_dashboard_url
   end
 
   def seller_dashboard
@@ -82,11 +75,10 @@ class ProductsController < ApplicationController
     end
   end
 
-  def verify_seller
-    unless current_user.role == 'seller'
-      flash[:notice] = 'You need a seller account to access a seller dashboard.'
-      redirect_to '/login'
-    end
+  def authorize_seller
+    return if current_user.role == ROLE_SELLER
+    flash[:notice] = 'You need a seller account for this action.'
+    redirect_to login_url
   end
 
   def product_params
@@ -100,8 +92,20 @@ class ProductsController < ApplicationController
   end
 
   def destroy_cart_items
-    cart_items = CartItem.where('product_id = ?', @product.id)
+    cart = fetch_cart
+    cart_items = CartItem.where('product_id = ? AND cart_id = ?',
+                                @product.id, cart.id)
     return if cart_items.blank?
     cart_items.destroy_all
+  end
+
+  def fetch_product
+    begin
+      @product = Product.find(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      flash[:notice] = e.message
+      redirect_to products_url
+    end
+    @product_images = @product.product_images.all
   end
 end

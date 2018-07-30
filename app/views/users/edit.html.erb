@@ -3,4 +3,9 @@
 
 <% provide(:button_text, "Save changes") %>
 
+<% unless flash[:error].nil? %>
+  <%= flash[:error].html_safe %>
+<% end %>
+
+<br><br>
 <%= render 'form' %>

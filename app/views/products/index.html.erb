@@ -1,9 +1,9 @@
 <h1> Products list! </h1>
 <br>
 
-<% if !(session[:user_id].present?) %>
+<% unless current_user.present? %>
 
-  <%= button_to "Login", '/login',
+  <%= button_to "Login", login_path,
       :id => "login-button", :method => :get %>
   <br>
   <%= button_to "Signup", new_user_path,
@@ -12,19 +12,21 @@
 
 <% else %>
 
-  <i> <%= "You are logged in as " + current_user.email %> <br> <i>
+  <i> <%= "You are logged in as " + current_user.email %> <br> </i>
 
   <br>
-  <%= button_to "Logout", '/logout',
+  <%= button_to "Logout", logout_path,
      :id => "logout-button", :method => :get %>
-  <br>
-  <br>
+  <br><br>
   <%= button_to "Profile Settings", edit_user_path(current_user.id),
      :id => "profile-settings-button", :method => :get %>
+  <br><br>
+  <%= button_to "Cart", cart_checkout_index_path,
+     :id => "cart-button", :method => :get %>
   <br>
   <% if current_user.role == "seller" %>
     <br>
-    <%= button_to "Seller dashboard", '/seller_dashboard',
+    <%= button_to "Seller dashboard", seller_dashboard_path,
         :id => "seller-dashboard-button", :method => :get %>
     <br>
   <% end %>
