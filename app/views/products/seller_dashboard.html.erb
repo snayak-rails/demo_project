@@ -2,7 +2,9 @@
     :id => "add-product-button", :method => :get %>
 
 <br>
-<%= flash[:notice] %>
+<% unless flash[:notice].blank? %>
+  <%= flash[:notice].html_safe %>
+<% end %>
 
 <table border=1>
   <thead>
@@ -27,7 +29,8 @@
                :id => "show-product-button", :method => :get %><td>
 
         <td><%= button_to "delete", product_path(product.id),
-               :id => "delete-product-button", :method => :delete %><td>
+               :id => "delete-product-button", :method => :delete,
+                data: { confirm: 'Are you sure?' } %><td>
 
         <td><%= button_to "edit", edit_product_path(product.id),
                :id => "edit-product-button", :method => :get %><td>

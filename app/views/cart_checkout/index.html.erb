@@ -1,6 +1,8 @@
 <h1>Cart</h1>
 
-<%= flash[:notice] %>
+<% unless flash[:notice].blank? %>
+  <%= flash[:notice].html_safe %>
+<% end %>
 
 <table border=1>
   <thead>
@@ -14,10 +16,12 @@
   <tbody>
     <% @cart_items.each do |cart_item| %>
       <tr>
-        <td><%= cart_item.title %></td>
+        <% product = Product.find(cart_item.product_id) %>
+        <td><%= product.title %></td>
         <td><%= cart_item.quantity %></td>
-        <td><%= (cart_item.price * cart_item.quantity).round(2) %></td>
-        <td><%= form_tag(update_cart_item_cart_checkout_path(cart_item.id), method: :put) do %>
+        <td><%= (product.price * cart_item.quantity).round(2) %></td>
+        <td><%= form_tag(update_cart_item_quantity_cart_checkout_path(cart_item.id),
+             method: :put) do %>
           <%= number_field_tag :updated_quantity, nil, required: true %>
           <%= submit_tag 'Save'%>
         <% end %></td>
@@ -27,7 +31,9 @@
       </tr>
     <% end %>
   </tbody>
-</table>
+</table><br>
+
+<%= 'Total Amount: ' + @total_amount.to_s %><br>
 
 <br>
 <%= button_to "Purchase", purchase_cart_checkout_index_path,

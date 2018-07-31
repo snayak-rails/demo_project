@@ -1,10 +1,9 @@
 class ProductsController < ApplicationController
   include ApplicationHelper
   before_action :fetch_product,
-                except: %i[index new create seller_dashboard]
-  before_action :authorize_user, :authorize_seller,
-                except: %i[index show]
-
+                except: %i[index new create seller_dashboard searched_items]
+  before_action :authorize_user, except: %i[index show searched_items]
+  before_action :authorize_seller, only: %i[new create update edit destroy]
   after_action :destroy_product_images, :destroy_cart_items, only: %i[destroy]
 
   ROLE_SELLER = 'seller'.freeze
@@ -38,13 +37,13 @@ class ProductsController < ApplicationController
   end
 
   def update
-    if @product.update_attributes(product_params)
-      image_params = params[:product_images]['image']
-      update_product_images(image_params)
-      update_cart_items(product_params)
+    if @product.update(product_params)
+      image_params = params[:product_images]
+      update_product_images(image_params) if image_params.present?
       redirect_to seller_dashboard_url
     else
-      render :edit
+      flash[:notice] = @product.errors.full_messages.join('<br>')
+      redirect_to edit_product_url(@product.id)
     end
   end
 
@@ -57,21 +56,17 @@ class ProductsController < ApplicationController
     @seller_products = current_user.products.all
   end
 
+  def searched_items
+    @searched_items = Product.where('title ILIKE :search OR category ILIKE :search',
+                                    search: "%#{params[:search]}%")
+    flash[:notice] = 'No products found.' if @searched_items.blank?
+  end
+
   private
 
   def update_product_images(image_params)
-    @product_images.zip(image_params).each do |product_image, p|
+    @product_images.zip(image_params['image']).each do |product_image, p|
       product_image.update(image: p, product_id: @product.id)
-    end
-  end
-
-  def update_cart_items(product_params)
-    title = product_params[:title]
-    price = product_params[:price]
-    cart_items = CartItem.where('product_id = ?', @product.id)
-    return if cart_items.blank?
-    cart_items.each do |cart_item|
-      cart_item.update(title: title, price: price)
     end
   end
 
@@ -93,8 +88,8 @@ class ProductsController < ApplicationController
 
   def destroy_cart_items
     cart = fetch_cart
-    cart_items = CartItem.where('product_id = ? AND cart_id = ?',
-                                @product.id, cart.id)
+    cart_items = CartItem.where('cart_id = ? AND product_id = ?',
+                                cart.id, @product.id)
     return if cart_items.blank?
     cart_items.destroy_all
   end

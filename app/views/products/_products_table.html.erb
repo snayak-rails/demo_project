@@ -1,0 +1,26 @@
+<table border=1>
+  <thead>
+    <tr>
+      <th>User_id: </th>
+      <th>Title: </th>
+      <th>Category: </th>
+      <th>Description: </th>
+      <th>Price: </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% item_collection.each do |product| %>
+      <tr>
+        <td><%= product.user_id %></td>
+        <td><%= product.title %></td>
+        <td><%= product.category %></td>
+        <td><%= product.description %></td>
+        <td><%= product.price %></td>
+
+        <td><%= button_to "show", product_path(product.id),
+                :id => "show-product-button", :method => :get %><td>
+      </tr>
+      <br>
+    <% end %>
+  </tbody>
+</table>

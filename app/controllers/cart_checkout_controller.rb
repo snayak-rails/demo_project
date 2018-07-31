@@ -2,11 +2,13 @@ class CartCheckoutController < ApplicationController
   include ApplicationHelper
 
   before_action :authorize_user, :fetch_cart
-  before_action :fetch_cart_item, only: %i[update_cart_item destroy_cart_item]
+  before_action :fetch_cart_item,
+                only: %i[update_cart_item_quantity destroy_cart_item]
 
   def index
     flash[:notice] = 'You cannot access another cart' if @cart.id.nil?
     @cart_items = @cart.cart_items.all
+    @total_amount = calculate_total_amount(@cart_items) unless @cart_items.blank?
   end
 
   def order_history
@@ -33,7 +35,8 @@ class CartCheckoutController < ApplicationController
 
   def update
     begin
-      @cart.update!(purchase_params)
+      update_cart_items
+      @cart.update!(cart_params)
       flash[:notice] = 'Order confirmed!'
     rescue ActiveRecord::RecordInvalid => e
       flash[:notice] = e.record.errors.full_messages.join('<br>')
@@ -50,7 +53,15 @@ class CartCheckoutController < ApplicationController
     end
   end
 
-  def update_cart_item
+  def update_cart_items
+    @cart_items = @cart.cart_items.all
+    @cart_items.each do |cart_item|
+      product = Product.find(cart_item.product_id)
+      cart_item.update(title: product.title, price: product.price)
+    end
+  end
+
+  def update_cart_item_quantity
     begin
       @cart_item.update!(quantity: params[:updated_quantity])
     rescue ActiveRecord::RecordInvalid => e
@@ -73,12 +84,15 @@ class CartCheckoutController < ApplicationController
   def calculate_total_amount(cart_items)
     total_amount = 0
     cart_items.each do |cart_item|
-      total_amount += cart_item.price * cart_item.quantity
+      quantity = cart_item.quantity
+      product = Product.find(cart_item.product_id) if cart_item.price.nil?
+      total_amount += product.price * quantity if cart_item.price.nil?
+      total_amount += cart_item.price * quantity unless cart_item.price.nil?
     end
-    total_amount
+    total_amount.round(2)
   end
 
-  def purchase_params
+  def cart_params
     cart_params = params[:cart]
     @cart_items = @cart.cart_items.all
     total_amount = calculate_total_amount(@cart_items)
@@ -90,7 +104,7 @@ class CartCheckoutController < ApplicationController
 
   def cart_item_params
     { product_id: params[:product_id], cart_id: session[:cart_id],
-      price: params[:price], title: params[:title], quantity: 1 }
+      quantity: 1 }
   end
 
   def fetch_cart_item

@@ -3,7 +3,7 @@
 
 <% provide(:button_text, "Create") %>
 
-<% unless flash[:error].nil? %>
+<% unless flash[:error].blank? %>
   <%= flash[:error].html_safe %>
 <% end %>
 

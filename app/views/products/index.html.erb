@@ -1,20 +1,18 @@
-<h1> Products list! </h1>
-<br>
+<h1> Products list! </h1><br>
+
+<%= form_tag(searched_items_products_path, method: :get) do %>
+  <%= 'Search for products by title or category: ' %>
+  <%= text_field_tag :search, nil, required: true %>
+  <%= submit_tag 'Search' %>
+<% end %><br><br>
 
 <% unless current_user.present? %>
-
   <%= button_to "Login", login_path,
-      :id => "login-button", :method => :get %>
-  <br>
+      :id => "login-button", :method => :get %><br>
   <%= button_to "Signup", new_user_path,
-      :id => "signup-button", :method => :get %>
-  <br>
-
+      :id => "signup-button", :method => :get %><br>
 <% else %>
-
-  <i> <%= "You are logged in as " + current_user.email %> <br> </i>
-
-  <br>
+  <i> <%= "You are logged in as " + current_user.email %> <br> </i><br>
   <%= button_to "Logout", logout_path,
      :id => "logout-button", :method => :get %>
   <br><br>
@@ -30,34 +28,10 @@
         :id => "seller-dashboard-button", :method => :get %>
     <br>
   <% end %>
-
 <% end %>
 
-<%= flash[:notice] %>
+<% unless flash[:notice].blank? %>
+  <%= flash[:notice].html_safe %>
+<% end %>
 
-<table border=1>
-  <thead>
-    <tr>
-      <th>User_id: </th>
-      <th>Title: </th>
-      <th>Category: </th>
-      <th>Description: </th>
-      <th>Price: </th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @products.each do |product| %>
-      <tr>
-        <td><%= product.user_id %></td>
-        <td><%= product.title %></td>
-        <td><%= product.category %></td>
-        <td><%= product.description %></td>
-        <td><%= product.price %></td>
-
-        <td><%= button_to "show", product_path(product.id),
-                :id => "show-product-button", :method => :get %><td>
-      </tr>
-      <br>
-    <% end %>
-  </tbody>
-</table>
+<%= render partial: 'products_table', locals: {item_collection: @products} %>

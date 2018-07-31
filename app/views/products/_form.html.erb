@@ -2,7 +2,8 @@
 
   Title: <%= f.text_field :title %>
   <br>
-  Category: <%= f.text_field :category %>
+  Category: <%= f.select :category,
+   options_for_select(%i[book stationary garments accesories electronics]) %>
   <br>
   Description: <%= f.text_field :description %>
   <br>
@@ -20,6 +21,9 @@
   <%= f.submit yield(:button_text), class: "btn btn-primary" %><br>
 
   <br>
-  <em><%= flash[:notice] %><em>
+  <em><% unless flash[:notice].blank? %>
+        <%= flash[:notice].html_safe %>
+      <% end %>
+  <em>
 
 <% end %>

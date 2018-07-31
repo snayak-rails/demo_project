@@ -3,11 +3,15 @@ Rails.application.routes.draw do
   root 'application#start'
 
   resources :users, except: %i[index]
-  resources :products
+  resources :products do
+    collection do
+      get :searched_items
+    end
+  end
 
   resources :cart_checkout, except: %i[show new create] do
     member do
-      put :update_cart_item
+      put :update_cart_item_quantity
       delete :destroy_cart_item
     end
     collection do

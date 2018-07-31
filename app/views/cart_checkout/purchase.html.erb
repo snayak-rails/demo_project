@@ -19,6 +19,8 @@
 
   <%= f.submit 'Confirm order' %>
 
-  <%= flash[:notice] %>
+  <% unless flash[:notice].blank? %>
+    <%= flash[:notice].html_safe %>
+  <% end %>
 
 <% end %>
