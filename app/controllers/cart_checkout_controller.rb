@@ -7,7 +7,8 @@ class CartCheckoutController < ApplicationController
 
   def index
     flash[:notice] = 'You cannot access another cart' if @cart.id.nil?
-    @cart_items = @cart.cart_items.all
+    @cart_items = check_product_for_cart_item
+    # binding pry
     @total_amount = calculate_total_amount(@cart_items) unless @cart_items.blank?
   end
 
@@ -37,6 +38,7 @@ class CartCheckoutController < ApplicationController
     begin
       update_cart_items
       @cart.update!(cart_params)
+      session[:cart_id] = nil
       flash[:notice] = 'Order confirmed!'
     rescue ActiveRecord::RecordInvalid => e
       flash[:notice] = e.record.errors.full_messages.join('<br>')
@@ -112,5 +114,32 @@ class CartCheckoutController < ApplicationController
   rescue StandardError
     flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     redirect_to product_path(params[:product_id])
+  end
+
+  def check_product_for_cart_item
+    @cart.cart_items.each do |cart_item|
+      # binding pry
+      cart_item.destroy unless Product.exists?(id: cart_item.product_id)
+    end
+    @cart.cart_items.all
+  end
+
+  def fetch_cart
+    return @cart = Cart.find(session[:cart_id]) if session[:cart_id]
+    @cart = Cart.where('user_id = ? AND is_paid = ?',
+                       current_user.id, false).take
+    @cart.nil? ? create_cart : session[:cart_id] = @cart.id
+    @cart
+  end
+
+  def create_cart
+    @cart = current_user.carts.new(is_paid: false)
+    error_message = @cart.errors.full_messages.join('<br>')
+    if @cart.save(validate: false)
+      session[:cart_id] = @cart.id
+      @cart
+    else
+      flash.now[:notice] = error_message
+    end
   end
 end

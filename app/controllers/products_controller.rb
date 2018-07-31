@@ -4,7 +4,7 @@ class ProductsController < ApplicationController
                 except: %i[index new create seller_dashboard searched_items]
   before_action :authorize_user, except: %i[index show searched_items]
   before_action :authorize_seller, only: %i[new create update edit destroy]
-  after_action :destroy_product_images, :destroy_cart_items, only: %i[destroy]
+  after_action :destroy_product_images, only: %i[destroy]
 
   ROLE_SELLER = 'seller'.freeze
 
@@ -57,8 +57,8 @@ class ProductsController < ApplicationController
   end
 
   def searched_items
-    @searched_items = Product.where('title ILIKE :search OR category ILIKE :search',
-                                    search: "%#{params[:search]}%")
+    @searched_items = Product.where('title ILIKE ? OR category ILIKE ?',
+                                    "%#{params[:search]}%", "%#{params[:search]}%")
     flash[:notice] = 'No products found.' if @searched_items.blank?
   end
 
@@ -86,21 +86,11 @@ class ProductsController < ApplicationController
     @product_images.each(&:remove_image!)
   end
 
-  def destroy_cart_items
-    cart = fetch_cart
-    cart_items = CartItem.where('cart_id = ? AND product_id = ?',
-                                cart.id, @product.id)
-    return if cart_items.blank?
-    cart_items.destroy_all
-  end
-
   def fetch_product
-    begin
-      @product = Product.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      flash[:notice] = e.message
-      redirect_to products_url
-    end
+    @product = Product.find(params[:id])
     @product_images = @product.product_images.all
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:notice] = e.message
+    redirect_to products_url
   end
 end
