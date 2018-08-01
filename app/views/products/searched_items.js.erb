@@ -1,0 +1,4 @@
+$('#searched-items')
+  .html(
+    "<%= j (render partial: 'products_table', locals: {item_collection: @searched_items}) unless @searched_items.blank? %>"
+    + "<%= flash[:notice] %>")

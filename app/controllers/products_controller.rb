@@ -60,6 +60,11 @@ class ProductsController < ApplicationController
     @searched_items = Product.where('title ILIKE ? OR category ILIKE ?',
                                     "%#{params[:search]}%", "%#{params[:search]}%")
     flash[:notice] = 'No products found.' if @searched_items.blank?
+    respond_to do |format|
+      format.html
+      format.js
+      flash.discard
+    end
   end
 
   private

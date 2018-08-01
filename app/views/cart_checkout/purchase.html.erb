@@ -1,26 +1,8 @@
-<%= form_for @cart, url: cart_checkout_path(@cart.id), method: :put do |f| %>
 
-  Name: <%= f.text_field :name %>
-  <br>
-  Contact: <%= f.number_field :contact %>
-  <br>
-  Email: <%= f.text_field :email %>
-  <br>
-  Address1: <%= f.text_field :address1 %>
-  <br>
-  City: <%= f.text_field :city %>
-  <br>
-  State: <%= f.text_field :state %>
-  <br>
-  Country: <%= f.text_field :country %>
-  <br>
-  Pincode: <%= f.number_field :pincode %>
-  <br>
+<%= render partial: 'purchase_form' %>
 
-  <%= f.submit 'Confirm order' %>
-
-  <% unless flash[:notice].blank? %>
-    <%= flash[:notice].html_safe %>
-  <% end %>
-
+<% unless flash[:notice].blank? %>
+  <%= flash[:notice].html_safe %>
 <% end %>
+
+

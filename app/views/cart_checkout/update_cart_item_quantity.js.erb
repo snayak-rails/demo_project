@@ -1,0 +1,2 @@
+$('.cart-item-quantity').html("<%= j (@cart_item.quantity.to_s) %>")
+$('.cart-item-price').html("<%= j ((@product.price * @cart_item.quantity).to_s) %>")

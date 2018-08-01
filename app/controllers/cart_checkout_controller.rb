@@ -8,8 +8,11 @@ class CartCheckoutController < ApplicationController
   def index
     flash[:notice] = 'You cannot access another cart' if @cart.id.nil?
     @cart_items = check_product_for_cart_item
-    # binding pry
     @total_amount = calculate_total_amount(@cart_items) unless @cart_items.blank?
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def order_history
@@ -29,15 +32,19 @@ class CartCheckoutController < ApplicationController
 
   def purchase
     @cart_items = @cart.cart_items.all
-    return unless @cart_items.blank?
-    flash[:notice] = 'Your cart is empty.'
-    redirect_to cart_checkout_index_url
+    message = 'Your cart is empty.'
+    flash[:notice] = message if @cart_items.blank?
+    respond_to do |format|
+      format.html { redirect_to cart_checkout_index_url }
+      format.js
+      flash.discard
+    end
   end
 
   def update
     begin
-      update_cart_items
       @cart.update!(cart_params)
+      update_cart_items
       session[:cart_id] = nil
       flash[:notice] = 'Order confirmed!'
     rescue ActiveRecord::RecordInvalid => e
@@ -64,12 +71,12 @@ class CartCheckoutController < ApplicationController
   end
 
   def update_cart_item_quantity
-    begin
-      @cart_item.update!(quantity: params[:updated_quantity])
-    rescue ActiveRecord::RecordInvalid => e
-      flash[:notice] = e.record.errors.full_messages.join('<br>')
+    @cart_item.update!(quantity: params[:updated_quantity])
+    respond_to do |format|
+      format.js
     end
-    redirect_to cart_checkout_index_url
+  rescue ActiveRecord::RecordInvalid => e
+    flash[:notice] = e.record.errors.full_messages.join('<br>')
   end
 
   def destroy_cart_item
@@ -111,6 +118,7 @@ class CartCheckoutController < ApplicationController
 
   def fetch_cart_item
     @cart_item = CartItem.find(params[:id])
+    @product = Product.find(@cart_item.product_id)
   rescue StandardError
     flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     redirect_to product_path(params[:product_id])
@@ -118,7 +126,6 @@ class CartCheckoutController < ApplicationController
 
   def check_product_for_cart_item
     @cart.cart_items.each do |cart_item|
-      # binding pry
       cart_item.destroy unless Product.exists?(id: cart_item.product_id)
     end
     @cart.cart_items.all

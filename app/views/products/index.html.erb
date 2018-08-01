@@ -1,14 +1,18 @@
 <h1> Products list! </h1><br>
 
-<%= form_tag(searched_items_products_path, method: :get) do %>
+<%= form_tag(searched_items_products_path, method: :get, remote: true) do %>
   <%= 'Search for products by title or category: ' %>
   <%= text_field_tag :search, nil, required: true %>
   <%= submit_tag 'Search' %>
 <% end %><br><br>
 
+<div id="searched-items" ></div>
+
+<div id="login-form" ></div><br>
+
 <% unless current_user.present? %>
   <%= button_to "Login", login_path,
-      :id => "login-button", :method => :get %><br>
+      :id => "login-button", :method => :get, remote: true %><br>
   <%= button_to "Signup", new_user_path,
       :id => "signup-button", :method => :get %><br>
 <% else %>
