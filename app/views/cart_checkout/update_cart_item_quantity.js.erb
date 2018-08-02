@@ -1,4 +1,8 @@
-$("#" + "<%= @cart_item.id %>").html("<%= j (@cart_item.quantity.to_s) %>")
-$("#" + "<%= @cart_item.id %>-price")
-  .html("<%= j ((@cart_item.quantity * @product.price).to_s) %>")
-$('#total-amount').html("<%= j (@cart.total_amount.to_s) %>")
+<%# binding.pry %>
+<% if @cart_item.errors.blank? %>
+  $("#" + "<%= @cart_item.id %>").html("<%= j (@cart_item.quantity.to_s) %>");
+  $("#" + "<%= @cart_item.id %>-price").html("<%= j ((@cart_item.quantity * @product.price).to_s) %>");
+  $('#total-amount').html("<%= j (@cart.total_amount.to_s) %>");
+<% else %>
+  $('#flash').html("<%= j (@cart_item.errors.full_messages.join('<br>')) %>");
+<% end %>

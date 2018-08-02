@@ -1,8 +1,10 @@
 <h1>Cart</h1>
 
-<%= flash[:notice].html_safe unless flash[:notice].blank? %>
+<div id='flash'>
+  <%= flash[:notice].html_safe unless flash[:notice].blank? %>
+</div>
 
-<table border=1>
+<table style="border: 1px solid black">
   <thead>
     <tr>
       <th>Title: </th>
@@ -26,11 +28,15 @@
             <%= (product.price * cart_item.quantity).round(2) %>
           </div>
         </td>
-        <td><%= form_tag(update_cart_item_quantity_cart_checkout_path(cart_item.id),
+        <td>
+          <div id="<%= cart_item.id %>-save" >
+            <%= form_tag(update_cart_item_quantity_cart_checkout_path(cart_item.id),
              method: :put, remote: true) do %>
-          <%= number_field_tag :updated_quantity, nil, required: true %>
-          <%= submit_tag 'Save'%>
-        <% end %></td>
+            <%= number_field_tag :updated_quantity, nil, required: true %>
+            <%= submit_tag 'Save'%>
+            <% end %>
+          </div>
+        </td>
         <td><%= button_to "Remove item",
                 destroy_cart_item_cart_checkout_path(cart_item.id),
                 :id => "remove-cart-item-button", :method => :delete %></td>

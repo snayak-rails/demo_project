@@ -68,13 +68,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def update_cart_item_quantity
-    # binding pry
-    @cart_item.update!(quantity: params[:updated_quantity])
-    respond_to do |format|
-      format.js
-    end
-  rescue ActiveRecord::RecordInvalid => e
-    flash[:notice] = e.record.errors.full_messages.join('<br>')
+    @cart_item.update(quantity: params[:updated_quantity])
   end
 
   def destroy_cart_item

@@ -45,6 +45,12 @@ gem 'carrierwave'
 # bootstrap_form:v4
 gem "bootstrap_form", ">= 4.0.0.alpha1"
 
+# bootstrap
+gem 'bootstrap'
+
+# linter for erb files
+gem 'erb_lint'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
