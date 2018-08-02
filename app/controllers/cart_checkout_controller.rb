@@ -7,12 +7,9 @@ class CartCheckoutController < ApplicationController
 
   def index
     flash[:notice] = 'You cannot access another cart' if @cart.id.nil?
-    @cart_items = check_product_for_cart_item
-    @total_amount = calculate_total_amount(@cart_items) unless @cart_items.blank?
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    @cart.destroy_cart_items_for_nil_product
+    @cart_items = @cart.cart_items.all
+    @total_amount = @cart.total_amount unless @cart_items.blank?
   end
 
   def order_history
@@ -71,6 +68,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def update_cart_item_quantity
+    # binding pry
     @cart_item.update!(quantity: params[:updated_quantity])
     respond_to do |format|
       format.js
@@ -89,17 +87,6 @@ class CartCheckoutController < ApplicationController
   end
 
   private
-
-  def calculate_total_amount(cart_items)
-    total_amount = 0
-    cart_items.each do |cart_item|
-      quantity = cart_item.quantity
-      product = Product.find(cart_item.product_id) if cart_item.price.nil?
-      total_amount += product.price * quantity if cart_item.price.nil?
-      total_amount += cart_item.price * quantity unless cart_item.price.nil?
-    end
-    total_amount.round(2)
-  end
 
   def cart_params
     cart_params = params[:cart]
@@ -122,13 +109,6 @@ class CartCheckoutController < ApplicationController
   rescue StandardError
     flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     redirect_to product_path(params[:product_id])
-  end
-
-  def check_product_for_cart_item
-    @cart.cart_items.each do |cart_item|
-      cart_item.destroy unless Product.exists?(id: cart_item.product_id)
-    end
-    @cart.cart_items.all
   end
 
   def fetch_cart

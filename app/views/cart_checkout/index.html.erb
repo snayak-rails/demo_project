@@ -17,10 +17,12 @@
         <% product = Product.find(cart_item.product_id) %>
         <td><%= product.title %></td>
         <td>
-          <div class='cart-item-quantity'><%= cart_item.quantity %></div>
+          <div id="<%= cart_item.id %>" >
+            <%= cart_item.quantity %>
+          </div>
         </td>
         <td>
-          <div class='cart-item-price'>
+          <div id="<%= cart_item.id %>-price" >
             <%= (product.price * cart_item.quantity).round(2) %>
           </div>
         </td>
@@ -37,7 +39,9 @@
   </tbody>
 </table><br>
 
-<%= 'Total Amount: ' + @total_amount.to_s %><br>
+<div id='total-amount'>
+  <%= 'Total Amount: ' + @total_amount.to_s %><br>
+</div>
 
 <br>
 <%= button_to "Purchase", purchase_cart_checkout_index_path,

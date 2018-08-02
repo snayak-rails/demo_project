@@ -10,4 +10,21 @@ class Cart < ApplicationRecord
   validates :state, presence: true, length: { maximum: 20 }
   validates :country, presence: true, length: { maximum: 20 }
   validates :pincode, presence: true, numericality: true, length: { maximum: 10 }
+
+  def total_amount
+    total_amount = 0
+    cart_items.each do |cart_item|
+      quantity = cart_item.quantity
+      product = Product.find(cart_item.product_id) if cart_item.price.nil?
+      total_amount += product.price * quantity if cart_item.price.nil?
+      total_amount += cart_item.price * quantity unless cart_item.price.nil?
+    end
+    total_amount.round(2)
+  end
+
+  def destroy_cart_items_for_nil_product
+    cart_items.each do |cart_item|
+      cart_item.destroy unless Product.exists?(id: cart_item.product_id)
+    end
+  end
 end
