@@ -1,61 +1,10 @@
-<h1> Products list! </h1><br>
-
-<%= form_tag(searched_items_products_path, method: :get, remote: true) do %>
-  <%= 'Search for products by title or category: ' %>
-  <%= text_field_tag :search, nil, required: true %>
-  <%= submit_tag 'Search' %>
-<% end %><br><br>
-
-<div id="searched-items" ></div>
-
-<div id="login-form" ></div><br>
-
-<div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="signup-form" ></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
+<div class="container">
+  <div id="login-form" ></div><br>
 </div>
-
-<% unless current_user.present? %>
-  <%= button_to "Login", login_path,
-      :id => "login-button", :method => :get, remote: true %><br>
-  <%= button_to "Signup", new_user_path,
-      :id => "signup-button", :method => :get, class: "btn btn-primary",
-      'data-toggle': "modal", 'data-target': "#modal-form", remote: true %><br>
-<% else %>
-  <i> <%= "You are logged in as " + current_user.email %> <br> </i><br>
-  <%= button_to "Logout", logout_path,
-     :id => "logout-button", :method => :get %>
-  <br><br>
-  <%= button_to "Profile Settings", edit_user_path(current_user.id),
-     :id => "profile-settings-button", :method => :get %>
-  <br><br>
-  <%= button_to "Cart", cart_checkout_index_path,
-     :id => "cart-button", :method => :get %>
-  <br>
-  <% if current_user.role == "seller" %>
-    <br>
-    <%= button_to "Seller dashboard", seller_dashboard_path,
-        :id => "seller-dashboard-button", :method => :get %>
-    <br>
-  <% end %>
-<% end %>
-
 <% unless flash[:notice].blank? %>
   <%= flash[:notice].html_safe %>
 <% end %>
 
-<%= render partial: 'products_table', locals: {item_collection: @products} %>
+<div id="products" >
+  <%= render partial: 'products_table', locals: {item_collection: @products} %>
+</div>

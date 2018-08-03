@@ -1,11 +1,14 @@
-<h1> User settings </h1>
-<br>
+<div class="container">
+  <h1>Profile Settings</h1><br>
 
-<% provide(:button_text, "Save changes") %>
+  <% provide(:button_text, "Save Changes") %>
 
-<% unless flash[:error].blank? %>
-  <%= flash[:error].html_safe %>
-<% end %>
+  <% unless flash[:error].blank? %>
+    <div class="alert alert-danger" role="alert">
+      <button class="close" data-dismiss="alert">×</button>
+      <%= flash[:error].html_safe %>
+    </div>
+  <% end %><br><br>
 
-<br><br>
-<%= render 'form' %>
+  <%= render 'form' %>
+</div>

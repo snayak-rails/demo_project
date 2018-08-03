@@ -1,26 +1,25 @@
-<table style="border: 1px solid black">
-  <thead>
-    <tr>
-      <th>User_id: </th>
-      <th>Title: </th>
-      <th>Category: </th>
-      <th>Description: </th>
-      <th>Price: </th>
-    </tr>
-  </thead>
-  <tbody>
-    <% item_collection.each do |product| %>
-      <tr>
-        <td><%= product.user_id %></td>
-        <td><%= product.title %></td>
-        <td><%= product.category %></td>
-        <td><%= product.description %></td>
-        <td><%= product.price %></td>
-
-        <td><%= button_to "show", product_path(product.id),
-                :id => "show-product-button", :method => :get %><td>
-      </tr>
-      <br>
-    <% end %>
-  </tbody>
-</table><br><br>
+<div class="row">
+  <% item_collection.each do |product| %>
+    <div class="col-sm-3 col-md-4 col-xs-12 col-lg-3">
+      <div class="card-deck">
+        <div class="card border-success mb-3">
+          <%# binding.pry %>
+          <img class="card-img-top"
+           src="<%= product.product_images.first.image.url %>"
+           alt="Card image cap" style="height: 170px;">
+          <div class="card-body">
+            <h5 class="card-title"><%= product.title %></h5>
+            <p class="card-text"><%= product.description %></p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Category: <%= product.category %></li>
+              <li class="list-group-item">Price: <%= product.price %></li>
+              <li class="list-group-item">SellerId: <%= product.user_id %></li>
+            </ul><br>
+            <%= button_to "show", product_path(product.id), class: "btn btn-success",
+               :id => "show-product-button", :method => :get %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

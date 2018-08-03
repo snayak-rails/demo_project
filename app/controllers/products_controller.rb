@@ -3,7 +3,8 @@ class ProductsController < ApplicationController
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard searched_items]
   before_action :authorize_user, except: %i[index show searched_items]
-  before_action :authorize_seller, only: %i[new create update edit destroy]
+  before_action :authorize_seller,
+                only: %i[seller_dashboard new create update edit destroy]
   after_action :destroy_product_images, only: %i[destroy]
 
   ROLE_SELLER = 'seller'.freeze
@@ -60,11 +61,7 @@ class ProductsController < ApplicationController
     @searched_items = Product.where('title ILIKE ? OR category ILIKE ?',
                                     "%#{params[:search]}%", "%#{params[:search]}%")
     flash[:notice] = 'No products found.' if @searched_items.blank?
-    respond_to do |format|
-      format.html
-      format.js
-      flash.discard
-    end
+    flash.discard
   end
 
   private
