@@ -78,7 +78,7 @@ class ProductsController < ApplicationController
   end
 
   def authorize_seller
-    return if current_user.role == ROLE_SELLER
+    return if current_user.role == Constants::ROLE_SELLER
     flash[:notice] = 'You need a seller account for this action.'
     redirect_to login_url
   end
