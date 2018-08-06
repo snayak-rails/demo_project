@@ -1,22 +1,58 @@
-<%= form_for @cart, url: cart_checkout_path(@cart.id), method: :put, remote: true do |f| %>
+<%= form_for @cart, url: cart_checkout_path(@cart.id), class: "form-horizontal center",
+     method: :put, remote: true do |f| %>
 
-  Name: <%= f.text_field :name %>
-  <br>
-  Contact: <%= f.number_field :contact %>
-  <br>
-  Email: <%= f.text_field :email %>
-  <br>
-  Address1: <%= f.text_field :address1 %>
-  <br>
-  City: <%= f.text_field :city %>
-  <br>
-  State: <%= f.text_field :state %>
-  <br>
-  Country: <%= f.text_field :country %>
-  <br>
-  Pincode: <%= f.number_field :pincode %>
-  <br>
-
-  <%= f.submit 'Confirm order' %>
-
+    <div class="form-group row">
+      <%= f.label :name, "Name:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :name, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :contact, "Contact:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.number_field :contact, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :email, "Email Address:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :email, class: "form-control", id: "exampleInputEmail1",
+          'aria-describedby': "emailHelp", placeholder: "Enter email" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :address1, "Address:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :address1, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :city, "City:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :city, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :state, "State:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :state, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :country, "Country:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :country, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <%= f.label :pincode, "Pincode:", class: "col-sm-2 col-form-label" %>
+      <div class="col-sm-10">
+        <%= f.number_field :pincode, class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-10">
+        <%= f.submit 'Confirm order', class: "btn btn-success" %>
+      </div>
+    </div>
 <% end %>

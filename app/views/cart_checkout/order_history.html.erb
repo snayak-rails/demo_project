@@ -1,21 +1,32 @@
-<h1>Order history</h1>
+<div class="container-fluid">
+  <h3>Order history</h3>
 
-<% @user_carts.each do |cart| %>
+  <% @user_carts.each_with_index do |cart, count| %>
+    <div class="container-fluid">
+      <h5>Order: <%= count + 1 %></h5>
+      <% cart.cart_items.each do |cart_item| %>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><%= cart_item.title %></h5>
+              <p class="card-text">
+                Quantity: <%= cart_item.quantity.to_s %>
+              </p>
+              <p class="card-text">
+                Price: <%= (cart_item.price * cart_item.quantity).round(2).to_s %>
+              </p>
+            </div>
+          </div>
+      <% end %>
 
-  <% cart.cart_items.each do |cart_item| %>
-    <%= cart_item.title %><br>
-    <%= 'Quantity: ' + cart_item.quantity.to_s %><br>
-    <%= 'Price: ' + (cart_item.price * cart_item.quantity).round(2).to_s %><br><br>
+      <%= 'Delivered to : ' + cart.name %><br>
+      <%= 'Contact: ' + cart.contact %><br>
+      <%= 'Email: ' + cart.email %><br>
+      <%= 'Address1: ' + cart.address1 %><br>
+      <%= 'City: ' + cart.city %><br>
+      <%= 'State: ' + cart.state %><br>
+      <%= 'Country: ' + cart.country %><br>
+      <%= 'Total Amount: ' + cart.total_amount.to_s %><br><br>
+    </div>
   <% end %>
-
-  <%= 'Delivered to : ' + cart.name %><br>
-  <%= 'Contact: ' + cart.contact %><br>
-  <%= 'Email: ' + cart.email %><br>
-  <%= 'Address1: ' + cart.address1 %><br>
-  <%= 'City: ' + cart.city %><br>
-  <%= 'State: ' + cart.state %><br>
-  <%= 'Country: ' + cart.country %><br>
-  <%= 'Total Amount: ' + cart.total_amount.to_s %><br><br>
-  <%= '-----------------------------------------------------------------------' %><br>
-<% end %>
+</div>
 

@@ -7,10 +7,8 @@ class ProductsController < ApplicationController
                 only: %i[seller_dashboard new create update edit destroy]
   after_action :destroy_product_images, only: %i[destroy]
 
-  ROLE_SELLER = 'seller'.freeze
-
   def index
-    @products = Product.all
+    @products = Product.all.paginate(page: params[:page], per_page: 2)
   end
 
   def show
@@ -22,16 +20,17 @@ class ProductsController < ApplicationController
   end
 
   def create
-    @product = current_user.products.new(product_params)
-    if @product.save
-      params[:product_images]['image'].each do |a|
-        @product.product_images.create!(image: a, product_id: @product.id)
+    respond_to do |format|
+      @product = current_user.products.new(product_params)
+      if @product.save
+        add_product_images unless params[:product_images].blank?
+        flash[:notice] = 'Product added!'
+        format.html { redirect_to seller_dashboard_url }
+      else
+        flash.now[:notice] = @product.errors.full_messages.join('<br>')
+        format.js { render file: 'shared/flash' }
       end
-      flash[:notice] = 'Product added!'
-    else
-      flash[:notice] = 'Attempt failed.'
     end
-    redirect_to seller_dashboard_url
   end
 
   def edit
@@ -66,6 +65,12 @@ class ProductsController < ApplicationController
 
   private
 
+  def add_product_images
+    params[:product_images]['image'].each do |a|
+      @product.product_images.create!(image: a, product_id: @product.id)
+    end
+  end
+
   def update_product_images(image_params)
     @product_images.zip(image_params['image']).each do |product_image, p|
       product_image.update(image: p, product_id: @product.id)
@@ -85,7 +90,7 @@ class ProductsController < ApplicationController
   end
 
   def destroy_product_images
-    @product_images.each(&:remove_image!)
+    @product_images.each(&:remove_image!) unless @product_images.blank?
   end
 
   def fetch_product

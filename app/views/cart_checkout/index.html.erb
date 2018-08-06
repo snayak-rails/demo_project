@@ -1,61 +1,47 @@
-<h1>Cart</h1>
+<div class="container-fluid">
+  <h3>Cart</h3>
 
-<div id='flash'>
-  <%= flash[:notice].html_safe unless flash[:notice].blank? %>
-</div>
-
-<table style="border: 1px solid black">
-  <thead>
-    <tr>
-      <th>Title: </th>
-      <th>Quantity: </th>
-      <th>Price: </th>
-      <th>Number of items: </th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @cart_items.each do |cart_item| %>
-      <tr>
-        <% product = Product.find(cart_item.product_id) %>
-        <td><%= product.title %></td>
-        <td>
-          <div id="<%= cart_item.id %>" >
-            <%= cart_item.quantity %>
-          </div>
-        </td>
-        <td>
-          <div id="<%= cart_item.id %>-price" >
-            <%= (product.price * cart_item.quantity).round(2) %>
-          </div>
-        </td>
-        <td>
-          <div id="<%= cart_item.id %>-save" >
-            <%= form_tag(update_cart_item_quantity_cart_checkout_path(cart_item.id),
-             method: :put, remote: true) do %>
-            <%= number_field_tag :updated_quantity, nil, required: true %>
-            <%= submit_tag 'Save'%>
-            <% end %>
-          </div>
-        </td>
-        <td><%= button_to "Remove item",
-                destroy_cart_item_cart_checkout_path(cart_item.id),
-                :id => "remove-cart-item-button", :method => :delete %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table><br>
+<% @cart_items.each do |cart_item| %>
+  <% product = Product.find(cart_item.product_id) %>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><%= product.title %></h5>
+      <div id="<%= cart_item.id %>-price">
+        Price: <%= (product.price * cart_item.quantity).round(2) %>
+      </div>
+      <div id="<%= cart_item.id %>" class="d-inline-block">
+        Quantity: <%= cart_item.quantity %>
+      </div>
+      <div id="<%= cart_item.id %>-save" class="d-inline-block">
+        <%= form_tag(update_cart_item_quantity_cart_checkout_path(cart_item.id),
+          method: :put, remote: true) do %>
+        <%= number_field_tag :updated_quantity, nil, required: true %>
+        <%= submit_tag 'Save', class: "btn btn-success" %>
+        <% end %>
+      </div>
+      <div>
+          <%= button_to "Remove item",
+          destroy_cart_item_cart_checkout_path(cart_item.id),
+          id: "remove-cart-item-button", method: :delete, class: "btn btn-danger" %>
+      </div>
+    </div>
+  </div>
+<% end %><br>
 
 <div id='total-amount'>
-  <%= 'Total Amount: ' + @total_amount.to_s %><br>
+  Total Amount: <%= @total_amount.to_s %><br>
 </div>
 
 <br>
-<%= button_to "Purchase", purchase_cart_checkout_index_path,
+<div id='flash'></div>
+
+<%= button_to "Purchase", purchase_cart_checkout_index_path, class: "btn btn-primary",
     :id => "purchase-cart-button", :method => :get, remote: true %>
 
 <div id='purchase-form' ></div><br>
 
 <%= button_to "Order history", order_history_cart_checkout_index_path,
-    :id => "order-history-button", :method => :get %><br>
+    :id => "order-history-button", :method => :get, class: "btn btn-info" %><br>
 
+</div>
 

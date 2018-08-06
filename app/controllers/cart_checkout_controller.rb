@@ -29,25 +29,26 @@ class CartCheckoutController < ApplicationController
 
   def purchase
     @cart_items = @cart.cart_items.all
-    message = 'Your cart is empty.'
-    flash[:notice] = message if @cart_items.blank?
-    respond_to do |format|
-      format.html { redirect_to cart_checkout_index_url }
-      format.js
+    if @cart_items.blank?
+      flash[:notice] = 'Your cart is empty.'
+      render file: 'shared/flash.js.erb'
       flash.discard
     end
   end
 
   def update
-    begin
-      @cart.update!(cart_params)
-      update_cart_items
-      session[:cart_id] = nil
-      flash[:notice] = 'Order confirmed!'
-    rescue ActiveRecord::RecordInvalid => e
-      flash[:notice] = e.record.errors.full_messages.join('<br>')
+    respond_to do |format|
+      if @cart.update(cart_params)
+        @cart.update_cart_items
+        session[:cart_id] = nil
+        flash[:notice] = 'Order confirmed!'
+        format.html { render :index }
+      else
+        flash[:notice] = @cart.errors.full_messages.join('<br>')
+        format.js { render file: 'shared/flash' }
+        flash.discard
+      end
     end
-    redirect_to cart_checkout_index_url
   end
 
   def create_cart_item
@@ -56,14 +57,6 @@ class CartCheckoutController < ApplicationController
       redirect_to cart_checkout_index_url
     else
       flash[:notice] = @cart_item.errors.full_messages.join('<br>')
-    end
-  end
-
-  def update_cart_items
-    @cart_items = @cart.cart_items.all
-    @cart_items.each do |cart_item|
-      product = Product.find(cart_item.product_id)
-      cart_item.update(title: product.title, price: product.price)
     end
   end
 
@@ -85,7 +78,7 @@ class CartCheckoutController < ApplicationController
   def cart_params
     cart_params = params[:cart]
     @cart_items = @cart.cart_items.all
-    total_amount = calculate_total_amount(@cart_items)
+    total_amount = @cart.total_amount
     { name: cart_params[:name], contact: cart_params[:contact], email: cart_params[:email],
       address1: cart_params[:address1], city: cart_params[:city], state: cart_params[:state],
       country: cart_params[:country], pincode: cart_params[:pincode],

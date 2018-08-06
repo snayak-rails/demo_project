@@ -2,5 +2,5 @@
   <%= flash[:notice].html_safe %>
 <% end %><br><br>
 
-<%= render partial: 'products_table',
+<%= render partial: 'products',
  locals: {item_collection: @searched_items} %>

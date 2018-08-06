@@ -5,8 +5,8 @@
         <div class="card border-success mb-3">
           <%# binding.pry %>
           <img class="card-img-top"
-           src="<%= product.product_images.first.image.url %>"
-           alt="Card image cap" style="height: 170px;">
+           src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
+            alt="Image not available" style="height: 170px;">
           <div class="card-body">
             <h5 class="card-title"><%= product.title %></h5>
             <p class="card-text"><%= product.description %></p>
@@ -23,3 +23,6 @@
     </div>
   <% end %>
 </div>
+
+<%= will_paginate item_collection,
+ renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer %>

@@ -22,6 +22,13 @@ class Cart < ApplicationRecord
     total_amount.round(2)
   end
 
+  def update_cart_items
+    cart_items.each do |cart_item|
+      product = Product.find(cart_item.product_id)
+      cart_item.update(title: product.title, price: product.price)
+    end
+  end
+
   def destroy_cart_items_for_nil_product
     cart_items.each do |cart_item|
       cart_item.destroy unless Product.exists?(id: cart_item.product_id)

@@ -1,8 +1,12 @@
-<h1>Add a product</h1>
-<br>
+<div class="container">
+  <h3>Add a product</h3>
+  <br>
 
-<% provide(:button_text, "Add Product") %>
+  <div id="flash"></div>
 
-<% provide(:multi_option, true) %>
+  <% provide(:button_text, "Add Product") %>
 
-<%= render 'form' %>
+  <% provide(:multi_option, true) %>
+
+  <%= render 'form' %>
+</div>

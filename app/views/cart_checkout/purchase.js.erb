@@ -1,2 +1,2 @@
 $('#purchase-form')
-  .html("<%= @cart_items.blank? ? flash[:notice] : j (render partial: 'purchase_form') %>")
+  .html("<%= j (render partial: 'purchase_form') %>")
