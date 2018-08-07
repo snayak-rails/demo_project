@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# User creation and profile settings
 class UsersController < ApplicationController
   include ApplicationHelper
 
