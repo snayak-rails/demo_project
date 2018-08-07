@@ -21,7 +21,7 @@ class CartCheckoutController < ApplicationController
   def add_to_cart
     @cart_item = CartItem.where('cart_id = ? AND product_id = ?',
                                 session[:cart_id], params[:product_id]).take
-    if @cart_item.nil?
+    if @cart_item.blank?
       create_cart_item
     else
       flash[:notice] = 'Item already added to cart.'
@@ -101,7 +101,7 @@ class CartCheckoutController < ApplicationController
     return @cart = Cart.find(session[:cart_id]) if session[:cart_id]
     @cart = Cart.where('user_id = ? AND is_paid = ?',
                        current_user.id, false).take
-    @cart.nil? ? create_cart : session[:cart_id] = @cart.id
+    @cart.blank? ? create_cart : session[:cart_id] = @cart.id
     @cart
   end
 
