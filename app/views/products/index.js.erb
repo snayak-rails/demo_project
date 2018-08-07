@@ -1,0 +1,4 @@
+$('#products')
+.html("<%= j(render partial: 'products', locals: { item_collection: @products }) %>")
+
+$('.pagination a').attr('data-remote', 'true');

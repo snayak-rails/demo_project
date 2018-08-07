@@ -1,1 +1,2 @@
-$("#flash").html("<%= j(render partial: 'shared/flash', locals: {message: flash[:notice]}) %>")
+$("#flash")
+.html("<%= j(render partial: 'shared/flash', locals: {message: flash[:notice]}) %>")

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Cart logic for cart items and orders
 class CartCheckoutController < ApplicationController
   include ApplicationHelper
 
@@ -6,7 +9,6 @@ class CartCheckoutController < ApplicationController
                 only: %i[update_cart_item_quantity destroy_cart_item]
 
   def index
-    flash[:notice] = 'You cannot access another cart' if @cart.id.nil?
     @cart.destroy_cart_items_for_nil_product
     @cart_items = @cart.cart_items.all
     @total_amount = @cart.total_amount unless @cart_items.blank?
@@ -29,11 +31,9 @@ class CartCheckoutController < ApplicationController
 
   def purchase
     @cart_items = @cart.cart_items.all
-    if @cart_items.blank?
-      flash[:notice] = 'Your cart is empty.'
-      render file: 'shared/flash.js.erb'
-      flash.discard
-    end
+    return unless @cart_items.blank?
+    flash.now[:notice] = 'Your cart is empty.'
+    render file: 'shared/flash.js.erb'
   end
 
   def update
@@ -41,12 +41,11 @@ class CartCheckoutController < ApplicationController
       if @cart.update(cart_params)
         @cart.update_cart_items
         session[:cart_id] = nil
-        flash[:notice] = 'Order confirmed!'
+        flash.now[:notice] = 'Order confirmed!'
         format.html { render :index }
       else
-        flash[:notice] = @cart.errors.full_messages.join('<br>')
+        flash.now[:notice] = @cart.errors.full_messages.join('<br>')
         format.js { render file: 'shared/flash' }
-        flash.discard
       end
     end
   end

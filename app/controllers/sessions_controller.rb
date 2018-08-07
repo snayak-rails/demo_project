@@ -1,20 +1,18 @@
+# frozen_string_literal:true
+
+# Contains logic for user-login and logout
 class SessionsController < ApplicationController
   def new
-    respond_to do |format|
-      format.html
-      format.js
-    end
   end
 
   def create
     user = User.find_by_email(params[:email])
-    flash[:notice] = 'Enter correct email and password.' if user.nil?
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect_to products_url
     else
-      redirect_to login_url
+      flash[:notice] = 'Enter correct email and password.'
     end
+    redirect_to products_url
   end
 
   def destroy

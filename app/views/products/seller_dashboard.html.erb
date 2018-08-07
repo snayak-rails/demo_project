@@ -4,9 +4,8 @@
     :id => "add-product-button", :method => :get %>
 
 <br>
-<% unless flash[:notice].blank? %>
-  <%= flash[:notice].html_safe %>
-<% end %>
+<%= render partial: 'shared/flash',
+  locals: {message: flash[:notice]} unless flash[:notice].blank? %>
 
 <div class="row">
   <% @seller_products.each do |product| %>
@@ -44,5 +43,7 @@
   <% end %>
 </div>
 
-</div>
+<%= will_paginate @seller_products,
+ renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer %>
 
+</div>

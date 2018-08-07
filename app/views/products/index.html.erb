@@ -1,5 +1,7 @@
 <div class="container-fluid">
 
+  <div id='flash'></div>
+
   <div class="modal fade" id="login-modal" tabindex="-1" role="dialog"
    aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -29,3 +31,9 @@
   </div>
 
 </div>
+
+<script>
+  $(function(){
+     $('.pagination a').attr('data-remote', 'true')
+  });
+</script>

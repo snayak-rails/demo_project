@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
+# Contains methods for application wide usage
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-
-  # helper_method :current_user
 
   def start
     redirect_to products_url
   end
 
   def authorize_user
-    redirect_to login_url if session[:user_id].nil?
+    return unless session[:user_id].nil?
+    flash[:notice] = 'Please login to accesss the cart.'
+    redirect_to products_url
   end
 
   def not_found

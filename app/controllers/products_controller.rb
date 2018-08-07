@@ -1,3 +1,6 @@
+# frozen_string_literal:true
+
+# Contains logic for displaying products and actions for seller
 class ProductsController < ApplicationController
   include ApplicationHelper
   before_action :fetch_product,
@@ -23,12 +26,11 @@ class ProductsController < ApplicationController
     respond_to do |format|
       @product = current_user.products.new(product_params)
       if @product.save
-        add_product_images unless params[:product_images].blank?
+        add_product_images
         flash[:notice] = 'Product added!'
         format.html { redirect_to seller_dashboard_url }
       else
-        flash.now[:notice] = @product.errors.full_messages.join('<br>')
-        format.js { render file: 'shared/flash' }
+        flash_ajax_error(format, @product)
       end
     end
   end
@@ -37,50 +39,62 @@ class ProductsController < ApplicationController
   end
 
   def update
-    if @product.update(product_params)
-      image_params = params[:product_images]
-      update_product_images(image_params) if image_params.present?
-      redirect_to seller_dashboard_url
-    else
-      flash[:notice] = @product.errors.full_messages.join('<br>')
-      redirect_to edit_product_url(@product.id)
+    respond_to do |format|
+      if @product.update(product_params)
+        add_product_images
+        remove_images
+        format.html { redirect_to edit_product_url(@product.id) }
+      else
+        flash_ajax_error(format, @product)
+      end
     end
   end
 
   def destroy
-    @product.destroy ? flash[:notice] = 'Product removed' : flash[:notice] = 'Attempt failed'
-    redirect_to seller_dashboard_url
+    respond_to do |format|
+      if @product.destroy
+        flash[:notice] = 'Product removed'
+        format.html { redirect_to seller_dashboard_url }
+      else
+        flash_ajax_error(format, @product)
+      end
+    end
   end
 
   def seller_dashboard
-    @seller_products = current_user.products.all
+    @seller_products = current_user.products.all.paginate(page: params[:page], per_page: 2)
   end
 
   def searched_items
     @searched_items = Product.where('title ILIKE ? OR category ILIKE ?',
                                     "%#{params[:search]}%", "%#{params[:search]}%")
-    flash[:notice] = 'No products found.' if @searched_items.blank?
-    flash.discard
+    @searched_items = @searched_items.paginate(page: params[:page], per_page: 2)
+    return unless @searched_items.blank?
+    flash.now[:notice] = 'No products found.'
+    render file: 'shared/flash'
   end
 
   private
 
   def add_product_images
+    return if params[:product_images].blank?
     params[:product_images]['image'].each do |a|
       @product.product_images.create!(image: a, product_id: @product.id)
     end
   end
 
-  def update_product_images(image_params)
-    @product_images.zip(image_params['image']).each do |product_image, p|
-      product_image.update(image: p, product_id: @product.id)
+  def remove_images
+    return if params['image_ids'].blank?
+    params['image_ids'].each do |image_id|
+      ProductImage.find(image_id).remove_image!
+      ProductImage.destroy(image_id)
     end
   end
 
   def authorize_seller
     return if current_user.role == Constants::ROLE_SELLER
     flash[:notice] = 'You need a seller account for this action.'
-    redirect_to login_url
+    redirect_to products_url
   end
 
   def product_params
@@ -99,5 +113,10 @@ class ProductsController < ApplicationController
   rescue ActiveRecord::RecordNotFound => e
     flash[:notice] = e.message
     redirect_to products_url
+  end
+
+  def flash_ajax_error(format, record)
+    flash.now[:notice] = record.errors.full_messages.join('<br>')
+    format.js { render file: 'shared/flash' }
   end
 end
