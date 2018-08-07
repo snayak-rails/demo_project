@@ -13,7 +13,7 @@ class Cart < ApplicationRecord
 
   def total_amount
     total_amount = 0
-    cart_items.each do |cart_item|
+    cart_items.all.each do |cart_item|
       quantity = cart_item.quantity
       product = Product.find(cart_item.product_id) if cart_item.price.nil?
       total_amount += product.price * quantity if cart_item.price.nil?
@@ -23,15 +23,15 @@ class Cart < ApplicationRecord
   end
 
   def update_cart_items
-    cart_items.each do |cart_item|
+    cart_items.all.each do |cart_item|
       product = Product.find(cart_item.product_id)
       cart_item.update(title: product.title, price: product.price)
     end
   end
 
   def destroy_cart_items_for_nil_product
-    cart_items.each do |cart_item|
-      cart_item.destroy unless Product.exists?(id: cart_item.product_id)
+    cart_items.all.each do |cart_item|
+      CartItem.destroy(cart_item.id) unless Product.exists?(id: cart_item.product_id)
     end
   end
 end
