@@ -65,13 +65,11 @@ class CartCheckoutController < ApplicationController
   private
 
   def cart_params
-    cart_params = params[:cart]
-    @cart_items = @cart.cart_items.all
     total_amount = @cart.total_amount
-    { name: cart_params[:name], contact: cart_params[:contact], email: cart_params[:email],
-      address1: cart_params[:address1], city: cart_params[:city], state: cart_params[:state],
-      country: cart_params[:country], pincode: cart_params[:pincode],
-      total_amount: total_amount, is_paid: true }
+    params.require(:cart)
+          .permit(:name, :contact, :email, :address1, :city,
+                  :state, :country, :pincode)
+          .merge(total_amount: total_amount, is_paid: true)
   end
 
   def cart_item_params
