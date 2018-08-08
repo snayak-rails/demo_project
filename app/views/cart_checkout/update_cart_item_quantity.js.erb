@@ -2,7 +2,7 @@
   $("#" + "<%= @cart_item.id %>")
     .html("Quantity: <%= j (@cart_item.quantity.to_s) %>");
   $("#" + "<%= @cart_item.id %>-price")
-    .html("Price: <%= j ((@cart_item.quantity * @product.price).to_s) %>");
+    .html("Price: <%= j ((@cart_item.quantity * @product.price).round(2).to_s) %>");
   $('#total-amount')
-    .html("Total Amount: <%= j (@cart.total_amount.to_s) %>");
+    .html("Total Amount: <%= j (@cart.total_amount.round(2).to_s) %>");
 <% end %>
