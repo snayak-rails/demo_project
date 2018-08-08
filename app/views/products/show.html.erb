@@ -1,4 +1,7 @@
 <div class="container-fluid"><br>
+
+  <%= render partial: 'modal_login' %>
+
   <% @product_images.each do |product_image| %>
     <figure class="figure">
       <%= image_tag (product_image.image).url, class: "figure-img img-fluid rounded",

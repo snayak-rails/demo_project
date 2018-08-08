@@ -28,7 +28,7 @@ class ProductsController < ApplicationController
       if @product.save
         add_product_images
         flash[:notice] = 'Product added!'
-        format.html { redirect_to seller_dashboard_url }
+        format.html { redirect_to seller_dashboard_products_url }
       else
         flash_ajax_error(format, @product)
       end
@@ -54,7 +54,7 @@ class ProductsController < ApplicationController
     respond_to do |format|
       if @product.destroy
         flash[:notice] = 'Product removed'
-        format.html { redirect_to seller_dashboard_url }
+        format.html { redirect_to seller_dashboard_products_url }
       else
         flash_ajax_error(format, @product)
       end

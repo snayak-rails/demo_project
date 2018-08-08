@@ -46,8 +46,8 @@
                   :id => "cart-link", :method => :get,
                   class: "btn btn-primary", class: "nav-link" %>
               </li>
-              <% if current_user.role == "seller" %>
-                <%= link_to "Seller dashboard", seller_dashboard_path,
+              <% if current_user.role == Constants::ROLE_SELLER %>
+                <%= link_to "Seller dashboard", seller_dashboard_products_path,
                   :id => "seller_dashboard-link", :method => :get,
                   class: "btn btn-primary", class: "nav-link" %>
               <% end %>

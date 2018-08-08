@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :products do
     collection do
       get :searched_items
+      get :seller_dashboard
     end
   end
 
@@ -26,8 +27,6 @@ Rails.application.routes.draw do
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'
-
-  get '/seller_dashboard' => 'products#seller_dashboard'
 
   get '*path' => 'application#not_found'
 end
