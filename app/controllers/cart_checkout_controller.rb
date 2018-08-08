@@ -88,9 +88,6 @@ class CartCheckoutController < ApplicationController
   def fetch_cart_item
     @cart_item = CartItem.find(params[:id])
     @product = Product.find(@cart_item.product_id)
-  rescue ActiveRecord::RecordNotFound
-    flash[:notice] = @cart_item.errors.full_messages.join('<br>')
-    redirect_to product_path(params[:product_id])
   end
 
   def create_cart
