@@ -15,9 +15,9 @@ class Cart < ApplicationRecord
     total_amount = 0
     cart_items.all.each do |cart_item|
       quantity = cart_item.quantity
-      product = Product.find(cart_item.product_id) if cart_item.price.nil?
-      total_amount += product.price * quantity if cart_item.price.nil?
-      total_amount += cart_item.price * quantity unless cart_item.price.nil?
+      product = Product.find(cart_item.product_id) if cart_item.price.blank?
+      total_amount += product.price * quantity if cart_item.price.blank?
+      total_amount += cart_item.price * quantity unless cart_item.price.blank?
     end
     total_amount.round(2)
   end
@@ -37,13 +37,4 @@ class Cart < ApplicationRecord
     end
   end
 
-  def check_stock_for_cart_items
-    cart_items.all.each do |cart_item|
-      product = Product.find(cart_item.product_id)
-      next if cart_item.quantity <= product.stock
-      flash[:notice] = 'Product: ' + product.title + ' is out of stock'
-      redirect_to cart_checkout_index_url
-      break
-    end
-  end
 end

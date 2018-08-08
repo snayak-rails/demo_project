@@ -33,7 +33,10 @@
 </div>
 
 <br>
-<div id='flash'></div>
+<div id='flash'>
+  <%= render partial: 'shared/flash',
+  locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+</div>
 
 <%= button_to "Purchase", purchase_cart_checkout_index_path, class: "btn btn-primary",
     :id => "purchase-cart-button", :method => :get, remote: true %>

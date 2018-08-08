@@ -32,14 +32,16 @@ class CartCheckoutController < ApplicationController
 
   def purchase
     @cart_items = @cart.cart_items.all
-    return unless @cart_items.blank?
-    flash.now[:notice] = 'Your cart is empty.'
-    render file: 'shared/flash.js.erb'
+    if @cart_items.blank?
+      flash.now[:notice] = 'Your cart is empty.'
+      render file: 'shared/flash'
+    else
+      check_stock_for_cart_items(@cart_items)
+    end
   end
 
   def update
     respond_to do |format|
-      @cart.check_stock_for_cart_items
       if @cart.update(cart_params)
         @cart.update_cart_items
         session[:cart_id] = nil
@@ -123,5 +125,16 @@ class CartCheckoutController < ApplicationController
     return if product.stock >= 1
     flash[:notice] = 'Item out of stock'
     redirect_to product_path(product_id)
+  end
+
+  def check_stock_for_cart_items(cart_items)
+    cart_items.each do |cart_item|
+      product = Product.find(cart_item.product_id)
+      next if cart_item.quantity <= product.stock
+      flash.now[:notice] = 'Product: ' + product.title +
+                           ' has ' + product.stock.to_s + ' pieces available '
+      render file: 'shared/flash'
+      break
+    end
   end
 end
