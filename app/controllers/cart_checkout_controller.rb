@@ -48,7 +48,9 @@ class CartCheckoutController < ApplicationController
   end
 
   def update_cart_item_quantity
-    @cart_item.update(quantity: params[:updated_quantity])
+    return if @cart_item.update(quantity: params[:updated_quantity])
+    message = @cart_item.errors.full_messages.join('<br>')
+    flash_ajax_message(message)
   end
 
   def destroy_cart_item

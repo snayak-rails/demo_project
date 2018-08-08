@@ -5,7 +5,4 @@
     .html("Price: <%= j ((@cart_item.quantity * @product.price).to_s) %>");
   $('#total-amount')
     .html("Total Amount: <%= j (@cart.total_amount.to_s) %>");
-<% else %>
-  $('#flash')
-    .html("<%= j (@cart_item.errors.full_messages.join('<br>')) %>");
 <% end %>
