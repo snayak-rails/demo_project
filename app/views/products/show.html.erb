@@ -14,7 +14,7 @@
       <p class="card-text">Description: <%= @product.description %></p>
       <p class="card-text">Price: <%= @product.price.to_s %></p>
     </div>
-  </div>
+  </div><br>
 
   <% if current_user.present? %>
     <%= button_to "Add to Cart",

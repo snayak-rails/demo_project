@@ -25,6 +25,8 @@ class Cart < ApplicationRecord
   def update_cart_items
     cart_items.all.each do |cart_item|
       product = Product.find(cart_item.product_id)
+      reduced_stock = product.stock - cart_item.quantity
+      product.update(stock: reduced_stock)
       cart_item.update(title: product.title, price: product.price)
     end
   end
@@ -32,6 +34,16 @@ class Cart < ApplicationRecord
   def destroy_cart_items_for_nil_product
     cart_items.all.each do |cart_item|
       CartItem.destroy(cart_item.id) unless Product.exists?(id: cart_item.product_id)
+    end
+  end
+
+  def check_stock_for_cart_items
+    cart_items.all.each do |cart_item|
+      product = Product.find(cart_item.product_id)
+      next if cart_item.quantity <= product.stock
+      flash[:notice] = 'Product: ' + product.title + ' is out of stock'
+      redirect_to cart_checkout_index_url
+      break
     end
   end
 end

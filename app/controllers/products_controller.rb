@@ -100,7 +100,7 @@ class ProductsController < ApplicationController
   def product_params
     image = { product_images_attributes: %i[id image product_id] }
     params.require(:product)
-          .permit(:title, :category, :description, :price, image)
+          .permit(:title, :category, :description, :price, :stock, image)
   end
 
   def destroy_product_images

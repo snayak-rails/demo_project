@@ -22,6 +22,7 @@ class CartCheckoutController < ApplicationController
     @cart_item = CartItem.where('cart_id = ? AND product_id = ?',
                                 session[:cart_id], params[:product_id]).take
     if @cart_item.blank?
+      check_stock(params[:product_id])
       create_cart_item
     else
       flash[:notice] = 'Item already added to cart.'
@@ -38,11 +39,12 @@ class CartCheckoutController < ApplicationController
 
   def update
     respond_to do |format|
+      @cart.check_stock_for_cart_items
       if @cart.update(cart_params)
         @cart.update_cart_items
         session[:cart_id] = nil
-        flash.now[:notice] = 'Order confirmed!'
-        format.html { render :index }
+        flash[:notice] = 'Order confirmed!'
+        format.html { redirect_to cart_checkout_index_url }
       else
         flash.now[:notice] = @cart.errors.full_messages.join('<br>')
         format.js { render file: 'shared/flash' }
@@ -92,7 +94,7 @@ class CartCheckoutController < ApplicationController
   def fetch_cart_item
     @cart_item = CartItem.find(params[:id])
     @product = Product.find(@cart_item.product_id)
-  rescue StandardError
+  rescue ActiveRecord::RecordNotFound
     flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     redirect_to product_path(params[:product_id])
   end
@@ -114,5 +116,12 @@ class CartCheckoutController < ApplicationController
     else
       flash.now[:notice] = error_message
     end
+  end
+
+  def check_stock(product_id)
+    product = Product.find(product_id)
+    return if product.stock >= 1
+    flash[:notice] = 'Item out of stock'
+    redirect_to product_path(product_id)
   end
 end
