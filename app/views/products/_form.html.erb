@@ -9,7 +9,8 @@
   <div class="form-group row">
     <%= f.label :category, "Category:", class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10">
-      <%= f.select :category, options_for_select(%i[book stationary garments accesories electronics]) %>
+      <%= f.select :category,
+       options_for_select(Constants::CATEGORIES) %>
     </div>
   </div>
   <div class="form-group row">

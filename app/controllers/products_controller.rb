@@ -62,7 +62,8 @@ class ProductsController < ApplicationController
   end
 
   def seller_dashboard
-    @seller_products = current_user.products.all.paginate(page: params[:page], per_page: 2)
+    @seller_products = current_user.products.all
+                                   .paginate(page: params[:page], per_page: 2)
   end
 
   def searched_items
@@ -75,6 +76,26 @@ class ProductsController < ApplicationController
   end
 
   private
+
+  def authorize_seller
+    return if current_user.role == Constants::ROLE_SELLER
+    flash[:notice] = 'You need a seller account for this action.'
+    redirect_to products_url
+  end
+
+  def fetch_product
+    @product = Product.find(params[:id])
+    @product_images = @product.product_images.all
+  rescue ActiveRecord::RecordNotFound => e
+    flash[:notice] = e.message
+    redirect_to products_url
+  end
+
+  def product_params
+    image = { product_images_attributes: %i[id image product_id] }
+    params.require(:product)
+          .permit(:title, :category, :description, :price, :stock, image)
+  end
 
   def add_product_images
     return if params[:product_images].blank?
@@ -91,27 +112,7 @@ class ProductsController < ApplicationController
     end
   end
 
-  def authorize_seller
-    return if current_user.role == Constants::ROLE_SELLER
-    flash[:notice] = 'You need a seller account for this action.'
-    redirect_to products_url
-  end
-
-  def product_params
-    image = { product_images_attributes: %i[id image product_id] }
-    params.require(:product)
-          .permit(:title, :category, :description, :price, :stock, image)
-  end
-
   def destroy_product_images
     @product_images.each(&:remove_image!) unless @product_images.blank?
-  end
-
-  def fetch_product
-    @product = Product.find(params[:id])
-    @product_images = @product.product_images.all
-  rescue ActiveRecord::RecordNotFound => e
-    flash[:notice] = e.message
-    redirect_to products_url
   end
 end

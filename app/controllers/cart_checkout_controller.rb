@@ -77,20 +77,20 @@ class CartCheckoutController < ApplicationController
       quantity: 1 }
   end
 
-  def fetch_cart_item
-    @cart_item = CartItem.find(params[:id])
-    @product = Product.find(@cart_item.product_id)
-  rescue ActiveRecord::RecordNotFound
-    flash[:notice] = @cart_item.errors.full_messages.join('<br>')
-    redirect_to product_path(params[:product_id])
-  end
-
   def fetch_cart
     return @cart = Cart.find(session[:cart_id]) if session[:cart_id]
     @cart = Cart.where('user_id = ? AND is_paid = ?',
                        current_user.id, false).take
     @cart.blank? ? create_cart : session[:cart_id] = @cart.id
     @cart
+  end
+
+  def fetch_cart_item
+    @cart_item = CartItem.find(params[:id])
+    @product = Product.find(@cart_item.product_id)
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = @cart_item.errors.full_messages.join('<br>')
+    redirect_to product_path(params[:product_id])
   end
 
   def create_cart

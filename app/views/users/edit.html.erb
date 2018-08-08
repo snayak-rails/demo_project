@@ -3,10 +3,10 @@
 
   <% provide(:button_text, "Save Changes") %>
 
-  <% unless flash[:error].blank? %>
+  <% unless flash[:notice].blank? %>
     <div class="alert alert-danger" role="alert">
       <button class="close" data-dismiss="alert">×</button>
-      <%= flash[:error].html_safe %>
+      <%= flash[:notice].html_safe %>
     </div>
   <% end %><br><br>
 

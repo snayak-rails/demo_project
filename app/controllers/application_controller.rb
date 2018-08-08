@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   def not_found
     raise ActionController::RoutingError.new('Not Found')
   rescue ActionController::RoutingError
-    render file: 'public/404.html', status: 404
+    render file: 'public/404', status: 404
   end
 
   def flash_ajax_error(format, record)
