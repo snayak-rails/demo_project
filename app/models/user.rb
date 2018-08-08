@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# model for user
 class User < ApplicationRecord
   has_many :carts
   has_many :products

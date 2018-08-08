@@ -19,13 +19,16 @@
   <% if current_user.present? %>
     <%= button_to "Add to Cart",
       add_to_cart_cart_checkout_index_path(product_id: @product.id),
-      :id => "add-to-cart-button", :method => :post, class: "btn btn-warning" %><br>
+      :id => "add-to-cart-button", :method => :post,
+      remote: true, class: "btn btn-warning" %><br>
+
+    <div id='flash'>
+    <%= render partial: 'shared/flash',
+      locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+    </div>
 
     <%= button_to "Cart", cart_checkout_index_path,
       :id => "cart-button", :method => :get, class: "btn btn-info" %>
   <% end %>
 
-  <% unless flash[:notice].blank? %>
-    <%= flash[:notice].html_safe %>
-  <% end %>
 </div>

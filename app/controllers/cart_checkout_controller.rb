@@ -3,10 +3,13 @@
 # Cart logic for cart items and orders
 class CartCheckoutController < ApplicationController
   include ApplicationHelper
+  include Buyable
 
   before_action :authorize_user, :fetch_cart
   before_action :fetch_cart_item,
                 only: %i[update_cart_item_quantity destroy_cart_item]
+  before_action :check_stock, only: %i[add_to_cart]
+  before_action :check_stock_for_cart_items, only: %i[update]
 
   def index
     @cart.destroy_cart_items_for_nil_product
@@ -19,25 +22,16 @@ class CartCheckoutController < ApplicationController
   end
 
   def add_to_cart
+    product_id = params[:product_id]
     @cart_item = CartItem.where('cart_id = ? AND product_id = ?',
-                                session[:cart_id], params[:product_id]).take
-    if @cart_item.blank?
-      check_stock(params[:product_id])
-      create_cart_item
-    else
-      flash[:notice] = 'Item already added to cart.'
-      redirect_to product_path(params[:product_id])
-    end
+                                session[:cart_id], product_id).take
+    return create_cart_item if @cart_item.blank?
+    flash_ajax_message('Item already added to cart.')
   end
 
   def purchase
     @cart_items = @cart.cart_items.all
-    if @cart_items.blank?
-      flash.now[:notice] = 'Your cart is empty.'
-      render file: 'shared/flash'
-    else
-      check_stock_for_cart_items(@cart_items)
-    end
+    return flash_ajax_message('Your cart is empty.') if @cart_items.blank?
   end
 
   def update
@@ -48,18 +42,8 @@ class CartCheckoutController < ApplicationController
         flash[:notice] = 'Order confirmed!'
         format.html { redirect_to cart_checkout_index_url }
       else
-        flash.now[:notice] = @cart.errors.full_messages.join('<br>')
-        format.js { render file: 'shared/flash' }
+        flash_ajax_error(format, @cart)
       end
-    end
-  end
-
-  def create_cart_item
-    @cart_item = CartItem.new(cart_item_params)
-    if @cart_item.save
-      redirect_to cart_checkout_index_url
-    else
-      flash[:notice] = @cart_item.errors.full_messages.join('<br>')
     end
   end
 
@@ -120,21 +104,8 @@ class CartCheckoutController < ApplicationController
     end
   end
 
-  def check_stock(product_id)
-    product = Product.find(product_id)
-    return if product.stock >= 1
-    flash[:notice] = 'Item out of stock'
-    redirect_to product_path(product_id)
-  end
-
-  def check_stock_for_cart_items(cart_items)
-    cart_items.each do |cart_item|
-      product = Product.find(cart_item.product_id)
-      next if cart_item.quantity <= product.stock
-      flash.now[:notice] = 'Product: ' + product.title +
-                           ' has ' + product.stock.to_s + ' pieces available '
-      render file: 'shared/flash'
-      break
-    end
+  def create_cart_item
+    @cart_item = CartItem.create(cart_item_params)
+    flash_ajax_message('Item added to cart')
   end
 end

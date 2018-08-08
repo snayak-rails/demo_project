@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# model for cart_items in user cart
 class CartItem < ApplicationRecord
   belongs_to :cart
   belongs_to :product

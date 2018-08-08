@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_user
-    return unless session[:user_id].nil?
+    return unless session[:user_id].blank?
     flash[:notice] = 'Please login to accesss the cart.'
     redirect_to products_url
   end
@@ -18,5 +18,15 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new('Not Found')
   rescue ActionController::RoutingError
     render file: 'public/404.html', status: 404
+  end
+
+  def flash_ajax_error(format, record)
+    flash.now[:notice] = record.errors.full_messages.join('<br>')
+    format.js { render file: 'shared/flash' }
+  end
+
+  def flash_ajax_message(message)
+    flash.now[:notice] = message
+    render file: 'shared/flash'
   end
 end

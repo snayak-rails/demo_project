@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Model for cart
 class Cart < ApplicationRecord
   belongs_to :user
   has_many :cart_items, dependent: :destroy
@@ -36,5 +39,4 @@ class Cart < ApplicationRecord
       CartItem.destroy(cart_item.id) unless Product.exists?(id: cart_item.product_id)
     end
   end
-
 end

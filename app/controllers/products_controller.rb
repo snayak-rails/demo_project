@@ -114,9 +114,4 @@ class ProductsController < ApplicationController
     flash[:notice] = e.message
     redirect_to products_url
   end
-
-  def flash_ajax_error(format, record)
-    flash.now[:notice] = record.errors.full_messages.join('<br>')
-    format.js { render file: 'shared/flash' }
-  end
 end
