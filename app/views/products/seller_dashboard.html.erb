@@ -4,7 +4,7 @@
     :id => "add-product-button", :method => :get %>
 
 <br>
-  <div id=flash>
+  <div id="flash">
     <%= render partial: 'shared/flash',
     locals: {message: flash[:notice]} unless flash[:notice].blank? %>
   </div>
