@@ -20,11 +20,6 @@ class ApplicationController < ActionController::Base
     render file: 'public/404', status: 404
   end
 
-  def flash_ajax_error(format, record)
-    flash.now[:notice] = record.errors.full_messages.join('<br>')
-    format.js { render file: 'shared/flash' }
-  end
-
   def flash_ajax_message(message)
     flash.now[:notice] = message
     render file: 'shared/flash.js.erb'
