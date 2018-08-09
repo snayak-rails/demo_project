@@ -4,8 +4,10 @@
     :id => "add-product-button", :method => :get %>
 
 <br>
-<%= render partial: 'shared/flash',
-  locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+  <div id=flash>
+    <%= render partial: 'shared/flash',
+    locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+  </div>
 
 <div class="row">
   <% @seller_products.each do |product| %>
