@@ -1,9 +1,8 @@
 <div class="container-fluid">
+  <br>
+<%= link_to " Add product", new_product_path, class: "btn btn-primary fa fa-plus-circle",
+    :id => "add-product-button", :method => :get %><br><br>
 
-<%= button_to "Add product", new_product_path, class: "btn btn-primary",
-    :id => "add-product-button", :method => :get %>
-
-<br>
   <div id="flash">
     <%= render partial: 'shared/flash',
     locals: {message: flash[:notice]} unless flash[:notice].blank? %>
@@ -28,14 +27,14 @@
               <li class="list-group-item">SellerId: <%= product.user_id %></li>
             </ul><br>
             <div class="btn-toolbar">
-            <%= button_to "show", product_path(product.id),
+            <%= link_to "show", product_path(product.id),
                class: "btn btn-success btn-space",
                :id => "show-product-button", :method => :get %>
-            <%= link_to "edit", edit_product_path(product.id),
-               class: "btn btn-info btn-space",
+            <%= link_to "", edit_product_path(product.id),
+               class: "btn btn-info btn-space fa fa-pencil reg",
                :id => "edit-product-button", :method => :get %>
-            <%= button_to "delete", product_path(product.id),
-               class: "btn btn-danger btn-space",
+            <%= link_to "", product_path(product.id),
+               class: "btn btn-danger btn-space fa fa-trash reg",
                :id => "delete-product-button", :method => :delete,
                 data: { confirm: 'Are you sure?' } %>
             </div>

@@ -1,7 +1,16 @@
 @import "bootstrap";
+@import "font-awesome";
 
 .btn-space {
     margin-right: 5px;
+}
+
+.fa.reg {
+  font-size: 20px;
+}
+
+.fa.big {
+  font-size: 25px
 }
 
 .pagination {
