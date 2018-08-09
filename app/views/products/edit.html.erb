@@ -2,9 +2,7 @@
   <h3>Edit product details</h3>
   <br>
 
-  <div id="flash"></div>
-
-  <%= form_for(@product, html: { multipart: true }) do |f| %>
+  <%= form_for(@product, html: { multipart: true }, remote: true) do |f| %>
 
     <div class="form-group row">
       <%= f.label :title, "Title:", class: "col-sm-2 col-form-label" %>
@@ -57,6 +55,11 @@
       </div>
       <% end %><br>
     </div>
+
+    <div id="flash">
+    <%= render partial: 'shared/flash',
+      locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+    </div><br>
 
     <%= f.submit 'Save changes', class: "btn btn-success" %><br>
 

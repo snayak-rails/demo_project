@@ -14,8 +14,7 @@ class ProductsController < ApplicationController
     @products = Product.all.paginate(page: params[:page], per_page: 2)
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @product = current_user.products.new
@@ -23,41 +22,34 @@ class ProductsController < ApplicationController
   end
 
   def create
-    respond_to do |format|
-      @product = current_user.products.new(product_params)
-      if @product.save
-        add_product_images
-        flash[:notice] = 'Product added!'
-        format.html { redirect_to seller_dashboard_products_url }
-      else
-        flash_ajax_error(format, @product)
-      end
+    @product = current_user.products.new(product_params)
+    if @product.save
+      add_product_images
+      flash[:notice] = 'Product added!'
+      redirect_to seller_dashboard_products_url
+    else
+      flash_ajax_message(@product.errors.full_messages.join('<br>'))
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
-    respond_to do |format|
-      if @product.update(product_params)
-        add_product_images
-        remove_images
-        format.html { redirect_to edit_product_url(@product.id) }
-      else
-        flash_ajax_error(format, @product)
-      end
+    if @product.update_attributes(product_params)
+      add_product_images
+      remove_images
+      redirect_to edit_product_url(@product.id)
+    else
+      flash_ajax_message(@product.errors.full_messages.join('<br>'))
     end
   end
 
   def destroy
-    respond_to do |format|
-      if @product.destroy
-        flash[:notice] = 'Product removed'
-        format.html { redirect_to seller_dashboard_products_url }
-      else
-        flash_ajax_error(format, @product)
-      end
+    if @product.destroy
+      flash[:notice] = 'Product removed'
+      redirect_to seller_dashboard_products_url
+    else
+      flash_ajax_message(@product.errors.full_messages.join('<br>'))
     end
   end
 

@@ -35,15 +35,13 @@ class CartCheckoutController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @cart.update(cart_params)
-        @cart.update_cart_items
-        session[:cart_id] = nil
-        flash[:notice] = 'Order confirmed!'
-        format.html { redirect_to cart_checkout_index_url }
-      else
-        flash_ajax_error(format, @cart)
-      end
+    if @cart.update(cart_params)
+      @cart.update_cart_items
+      session[:cart_id] = nil
+      flash[:notice] = 'Order confirmed!'
+      redirect_to cart_checkout_index_url
+    else
+      flash_ajax_message(@cart.errors.full_messages.join('<br>'))
     end
   end
 
