@@ -35,7 +35,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def update
-    if @cart.update(cart_params)
+    if @cart.update_attributes(cart_params)
       @cart.update_cart_items
       session[:cart_id] = nil
       flash[:notice] = 'Order confirmed!'
