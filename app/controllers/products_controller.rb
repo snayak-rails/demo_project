@@ -63,8 +63,7 @@ class ProductsController < ApplicationController
                                     "%#{params[:search]}%", "%#{params[:search]}%")
     @searched_items = @searched_items.paginate(page: params[:page], per_page: 2)
     return unless @searched_items.blank?
-    flash.now[:notice] = 'No products found.'
-    render file: 'shared/flash'
+    flash_ajax_message('No products found.')
   end
 
   private
