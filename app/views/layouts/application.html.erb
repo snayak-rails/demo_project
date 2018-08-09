@@ -21,7 +21,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link fa fa-home reg"
+              <a class="nav-link fa fa-home big"
                 href="<%= products_path %>"><span class="sr-only">
               (current)</span></a>
             </li>
@@ -51,8 +51,8 @@
               <% end %>
               <li class="nav-item">
                 <%= link_to "", cart_checkout_index_path,
-                  :id => "cart-link", :method => :get,
-                  class: "btn btn-primary", class: "nav-link fa fa-shopping-cart big" %>
+                  :id => "cart-link", :method => :get, class: "btn btn-primary",
+                   class: "nav-link fa fa-shopping-cart big" %>
               </li>
             <% end %>
           </ul>

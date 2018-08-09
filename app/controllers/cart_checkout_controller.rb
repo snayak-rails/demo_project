@@ -24,7 +24,7 @@ class CartCheckoutController < ApplicationController
   def add_to_cart
     product_id = params[:product_id]
     @cart_item = CartItem.where('cart_id = ? AND product_id = ?',
-                                session[:cart_id], product_id).take
+                                @cart.id, product_id).take
     return create_cart_item if @cart_item.blank?
     flash_ajax_message('Item already added to cart.')
   end
@@ -37,7 +37,6 @@ class CartCheckoutController < ApplicationController
   def update
     if @cart.update_attributes(cart_params)
       @cart.update_cart_items
-      session[:cart_id] = nil
       flash[:notice] = 'Order confirmed!'
       redirect_to cart_checkout_index_url
     else
@@ -71,15 +70,14 @@ class CartCheckoutController < ApplicationController
   end
 
   def cart_item_params
-    { product_id: params[:product_id], cart_id: session[:cart_id],
+    { product_id: params[:product_id], cart_id: @cart.id,
       quantity: 1 }
   end
 
   def fetch_cart
-    return @cart = Cart.find(session[:cart_id]) if session[:cart_id]
     @cart = Cart.where('user_id = ? AND is_paid = ?',
                        current_user.id, false).take
-    @cart.blank? ? create_cart : session[:cart_id] = @cart.id
+    @cart.blank? ? create_cart : @cart
   end
 
   def fetch_cart_item
@@ -90,7 +88,6 @@ class CartCheckoutController < ApplicationController
   def create_cart
     @cart = current_user.carts.new(is_paid: false)
     if @cart.save(validate: false)
-      session[:cart_id] = @cart.id
       @cart
     else
       flash.now[:notice] = @cart.errors.full_messages.join('<br>')
