@@ -14,13 +14,15 @@ class Cart < ApplicationRecord
   validates :country, presence: true, length: { maximum: 20 }
   validates :pincode, presence: true, numericality: true, length: { maximum: 10 }
 
-  def total_amount
-    total_amount = 0
+  def total_amount(total_amount = 0)
     cart_items.all.each do |cart_item|
       quantity = cart_item.quantity
-      product = Product.find(cart_item.product_id) if cart_item.price.blank?
-      total_amount += product.price * quantity if cart_item.price.blank?
-      total_amount += cart_item.price * quantity unless cart_item.price.blank?
+      if cart_item.price.blank?
+        product = Product.find(cart_item.product_id)
+        total_amount += product.price * quantity
+      else
+        total_amount += cart_item.price * quantity
+      end
     end
     total_amount.round(2)
   end
