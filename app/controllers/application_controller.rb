@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
   def authorize_user
     return unless session[:user_id].blank?
-    flash[:notice] = 'Please login to accesss the cart.'
+    flash[:notice] = 'You need to login for this action.'
     redirect_to products_url
   end
 

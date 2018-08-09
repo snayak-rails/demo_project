@@ -82,7 +82,6 @@ class CartCheckoutController < ApplicationController
     @cart = Cart.where('user_id = ? AND is_paid = ?',
                        current_user.id, false).take
     @cart.blank? ? create_cart : session[:cart_id] = @cart.id
-    @cart
   end
 
   def fetch_cart_item
@@ -92,12 +91,11 @@ class CartCheckoutController < ApplicationController
 
   def create_cart
     @cart = current_user.carts.new(is_paid: false)
-    error_message = @cart.errors.full_messages.join('<br>')
     if @cart.save(validate: false)
       session[:cart_id] = @cart.id
       @cart
     else
-      flash.now[:notice] = error_message
+      flash.now[:notice] = @cart.errors.full_messages.join('<br>')
     end
   end
 
