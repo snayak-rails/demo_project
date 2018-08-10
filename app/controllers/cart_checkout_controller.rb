@@ -75,6 +75,14 @@ class CartCheckoutController < ApplicationController
   end
 
   def fetch_cart
+    if logged_in?
+      temp_cart_exists? ? @cart = Cart.merged_cart : fetch_current_user_cart
+    else
+      temp_cart_exists? ? @cart = current_temp_cart : create_temp_cart
+    end
+  end
+
+  def fetch_current_user_cart
     @cart = Cart.where('user_id = ? AND is_paid = ?',
                        current_user.id, false).take
     @cart.blank? ? create_cart : @cart
@@ -87,11 +95,15 @@ class CartCheckoutController < ApplicationController
 
   def create_cart
     @cart = current_user.carts.new(is_paid: false)
-    if @cart.save(validate: false)
-      @cart
-    else
-      flash.now[:notice] = @cart.errors.full_messages.join('<br>')
-    end
+    @cart.save(validate: false)
+    @cart
+  end
+
+  def create_temp_cart
+    @cart = Cart.new(is_paid: false)
+    @cart.save(validate: false)
+    save_temp_cart_id(@cart)
+    @cart
   end
 
   def create_cart_item

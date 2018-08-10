@@ -41,4 +41,12 @@ class Cart < ApplicationRecord
       CartItem.destroy(cart_item.id) unless Product.exists?(id: cart_item.product_id)
     end
   end
+
+  def self.merged_cart(user_cart, temp_cart)
+    temp_cart.cart_items.all.each do |cart_item|
+      cart_item.update_attribute(:cart_id, user_cart.id)
+    end
+    Cart.destroy(temp_cart.id)
+    user_cart
+  end
 end

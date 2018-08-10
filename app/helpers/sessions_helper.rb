@@ -18,4 +18,21 @@ module SessionsHelper
     session.delete(:user_id)
     @current_user = nil
   end
+
+  def save_temp_cart_id(cart)
+    session[:cart_id] = cart.id
+  end
+
+  def current_temp_cart
+    @current_temp_cart ||= Cart.find_by(id: session[:cart_id])
+  end
+
+  def temp_cart_exists?
+    !current_temp_cart.blank?
+  end
+
+  def remove_temp_cart_id
+    session.delete(:cart_id)
+    @current_temp_cart = nil
+  end
 end

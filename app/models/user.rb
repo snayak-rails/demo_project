@@ -2,8 +2,6 @@
 
 # model for user
 class User < ApplicationRecord
-  attr_accessor :remember_token
-
   has_many :carts
   has_many :products
 
