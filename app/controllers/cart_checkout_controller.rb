@@ -73,8 +73,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def cart_item_params
-    { product_id: params[:product_id], cart_id: @cart.id,
-      quantity: 1 }
+    { product_id: params[:product_id], cart_id: @cart.id, quantity: 1 }
   end
 
   def fetch_cart
