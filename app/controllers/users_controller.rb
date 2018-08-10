@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       log_in @user
-      flash[:notice] = 'Welcome ' + user.name
+      flash[:notice] = 'Welcome ' + @user.name
       redirect_to products_url
     else
       flash[:notice] = @user.errors.full_messages.join('<br>')
