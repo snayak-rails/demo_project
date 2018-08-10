@@ -2,7 +2,7 @@
 
 # User creation and profile settings
 class UsersController < ApplicationController
-  include ApplicationHelper
+  include SessionsHelper
 
   before_action :authorize_user, except: %i[new create]
   before_action :fetch_user, except: %i[new create]
@@ -13,9 +13,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-
     if @user.save
-      session[:user_id] = @user.id
+      log_in @user
+      remember @user
+      flash[:notice] = 'Welcome ' + user.name
       redirect_to products_url
     else
       flash[:notice] = @user.errors.full_messages.join('<br>')

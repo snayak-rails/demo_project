@@ -2,7 +2,7 @@
 
 # Contains logic for displaying products and actions for seller
 class ProductsController < ApplicationController
-  include ApplicationHelper
+  include SessionsHelper
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard searched_items]
   before_action :authorize_user, except: %i[index show searched_items]

@@ -2,7 +2,7 @@
 
 # Cart logic for cart items and orders
 class CartCheckoutController < ApplicationController
-  include ApplicationHelper
+  include SessionsHelper
   include Buyable
 
   before_action :authorize_user, :fetch_cart
