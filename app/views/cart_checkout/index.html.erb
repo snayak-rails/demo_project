@@ -9,7 +9,7 @@
     <div class="card-body">
       <h5 class="card-title"><%= product.title %></h5>
       <div id="<%= cart_item.id %>-price">
-        Price: <%= (product.price * cart_item.quantity).round(2) %>
+        Price: $<%= (product.price * cart_item.quantity).round(2) %>
       </div>
       <div id="<%= cart_item.id %>" class="d-inline-block">
         Quantity: <%= cart_item.quantity %>
@@ -31,7 +31,7 @@
 <% end %><br>
 
 <div id='total-amount'>
-  Total Amount: <%= @total_amount.to_s %><br>
+  Total Amount: $<%= @total_amount.to_s %><br>
 </div>
 
 <br>

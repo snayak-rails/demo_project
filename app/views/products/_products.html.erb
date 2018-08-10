@@ -12,9 +12,8 @@
             <p class="card-text"><%= product.description %></p>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">Category: <%= product.category %></li>
-              <li class="list-group-item">Price: <%= product.price %></li>
+              <li class="list-group-item">Price: $<%= product.price %></li>
               <li class="list-group-item">Stock: <%= product.stock %></li>
-              <li class="list-group-item">SellerId: <%= product.user_id %></li>
             </ul><br>
             <%= button_to "show", product_path(product.id), class: "btn btn-success",
                :id => "show-product-button", :method => :get %>
