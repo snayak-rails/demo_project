@@ -2,6 +2,8 @@
 
 # Contains methods for application wide usage
 class ApplicationController < ActionController::Base
+  include SessionsHelper
+
   protect_from_forgery with: :exception
 
   def start
@@ -9,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize_user
-    return unless session[:user_id].blank?
+    return if logged_in?
     flash[:notice] = 'You need to login for this action.'
     redirect_to products_url
   end
