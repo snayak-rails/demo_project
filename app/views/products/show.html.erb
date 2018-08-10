@@ -19,7 +19,6 @@
     </div>
   </div><br>
 
-  <% if current_user.present? %>
     <div id='flash'>
       <%= render partial: 'shared/flash',
       locals: {message: flash[:notice]} unless flash[:notice].blank? %>
@@ -32,6 +31,5 @@
 
     <%= button_to "Cart", cart_checkout_index_path,
       :id => "cart-button", :method => :get, class: "btn btn-info" %>
-  <% end %>
 
 </div>

@@ -49,12 +49,12 @@
                     class: "btn btn-primary", class: "nav-link" %>
                 </li>
               <% end %>
-              <li class="nav-item">
+            <% end %>
+            <li class="nav-item">
                 <%= link_to "", cart_checkout_index_path,
                   :id => "cart-link", :method => :get, class: "btn btn-primary",
                    class: "nav-link fa fa-shopping-cart big" %>
-              </li>
-            <% end %>
+            </li>
           </ul>
           <%# binding.pry %>
           <% if params[:controller] == 'products' && params[:action] == 'index' %>

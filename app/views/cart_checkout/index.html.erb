@@ -1,6 +1,8 @@
 <div class="container-fluid">
   <h3>Cart</h3>
 
+  <%= render partial: 'products/modal_login' %>
+
 <% @cart_items.each do |cart_item| %>
   <% product = Product.find(cart_item.product_id) %>
   <div class="card">
@@ -43,8 +45,10 @@
 
 <div id='purchase-form' ></div><br>
 
-<%= button_to "Order history", order_history_cart_checkout_index_path,
+<% if current_user %>
+  <%= button_to "Order history", order_history_cart_checkout_index_path,
     :id => "order-history-button", :method => :get, class: "btn btn-info" %><br>
+<% end %>
 
 </div>
 

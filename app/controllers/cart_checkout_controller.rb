@@ -5,7 +5,9 @@ class CartCheckoutController < ApplicationController
   include SessionsHelper
   include Buyable
 
-  before_action :authorize_user, :fetch_cart
+  before_action :fetch_cart
+  before_action :login_for_purchase, only: %i[purchase]
+  before_action :authorize_user, only: %i[order_history]
   before_action :fetch_cart_item,
                 only: %i[update_cart_item_quantity destroy_cart_item]
   before_action :check_stock, only: %i[add_to_cart]
@@ -36,6 +38,7 @@ class CartCheckoutController < ApplicationController
 
   def update
     if @cart.update_attributes(cart_params)
+      remove_temp_cart_id
       @cart.update_cart_items
       flash[:notice] = 'Order confirmed!'
       redirect_to cart_checkout_index_url
@@ -76,7 +79,11 @@ class CartCheckoutController < ApplicationController
 
   def fetch_cart
     if logged_in?
-      temp_cart_exists? ? @cart = Cart.merged_cart : fetch_current_user_cart
+      if temp_cart_exists?
+        @cart = Cart.merged_cart(fetch_current_user_cart, current_temp_cart)
+      else
+        fetch_current_user_cart
+      end
     else
       temp_cart_exists? ? @cart = current_temp_cart : create_temp_cart
     end
@@ -109,5 +116,10 @@ class CartCheckoutController < ApplicationController
   def create_cart_item
     @cart_item = CartItem.create(cart_item_params)
     flash_ajax_message('Item added to cart')
+  end
+
+  def login_for_purchase
+    return if logged_in?
+    flash_ajax_message('Please login to continue purchase.')
   end
 end
