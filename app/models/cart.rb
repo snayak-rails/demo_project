@@ -44,7 +44,13 @@ class Cart < ApplicationRecord
 
   def self.merged_cart(user_cart, temp_cart)
     temp_cart.cart_items.all.each do |cart_item|
-      cart_item.update_attribute(:cart_id, user_cart.id)
+      same_item = user_cart.cart_items.find_by_product_id(cart_item.product_id)
+      if same_item.blank?
+        cart_item.update(cart_id: user_cart.id)
+      else
+        new_quantity = cart_item.quantity + same_item.quantity
+        same_item.update(quantity: new_quantity)
+      end
     end
     Cart.destroy(temp_cart.id)
     user_cart

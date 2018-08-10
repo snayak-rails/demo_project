@@ -81,6 +81,8 @@ class CartCheckoutController < ApplicationController
     if logged_in?
       if temp_cart_exists?
         @cart = Cart.merged_cart(fetch_current_user_cart, current_temp_cart)
+        remove_temp_cart_id
+        @cart
       else
         fetch_current_user_cart
       end
