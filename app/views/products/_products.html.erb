@@ -3,6 +3,7 @@
     <div class="col-sm-3 col-md-4 col-xs-12 col-lg-3">
       <div class="card-deck">
         <div class="card border-success mb-3">
+          <%= link_to product, class: 'product-card' do %>
           <%# binding.pry %>
           <img class="card-img-top"
            src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
@@ -12,12 +13,13 @@
             <p class="card-text"><%= product.description %></p>
             <ul class="list-group list-group-flush">
               <li class="list-group-item">Category: <%= product.category %></li>
-              <li class="list-group-item">Price: $<%= product.price %></li>
+              <li class="list-group-item">
+                Price: <%= number_to_currency(product.price, unit:"$") %>
+              </li>
               <li class="list-group-item">Stock: <%= product.stock %></li>
             </ul><br>
-            <%= button_to "show", product_path(product.id), class: "btn btn-success",
-               :id => "show-product-button", :method => :get %>
           </div>
+          <% end %>
         </div>
       </div>
     </div>

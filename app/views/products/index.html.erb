@@ -5,7 +5,7 @@
     locals: {message: flash[:notice]} unless flash[:notice].blank? %>
   </div>
 
-  <%= render partial: 'modal_login' %>
+  <%= render partial: 'modal_login' %><br><br>
 
   <div id="products" >
     <%= render partial: 'products', locals: { item_collection: @products } %>

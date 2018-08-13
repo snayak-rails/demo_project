@@ -28,8 +28,4 @@
       add_to_cart_cart_checkout_index_path(product_id: @product.id),
       :id => "add-to-cart-button", :method => :post,
       remote: true, class: "btn btn-warning" %><br>
-
-    <%= button_to "Cart", cart_checkout_index_path,
-      :id => "cart-button", :method => :get, class: "btn btn-info" %>
-
 </div>

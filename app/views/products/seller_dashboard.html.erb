@@ -26,9 +26,6 @@
               <li class="list-group-item">Stock: <%= product.stock %></li>
             </ul><br>
             <div class="btn-toolbar">
-            <%= link_to "show", product_path(product.id),
-               class: "btn btn-success btn-space",
-               :id => "show-product-button", :method => :get %>
             <%= link_to "", edit_product_path(product.id),
                class: "btn btn-info btn-space fa fa-pencil reg",
                :id => "edit-product-button", :method => :get %>

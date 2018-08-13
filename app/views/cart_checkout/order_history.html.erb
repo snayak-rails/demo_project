@@ -12,7 +12,8 @@
                 Quantity: <%= cart_item.quantity.to_s %>
               </p>
               <p class="card-text">
-                Price: $<%= (cart_item.price * cart_item.quantity).round(2).to_s %>
+                Price:
+                <%= number_to_currency(cart_item.quantity + cart_item.price, unit: '$') %>
               </p>
             </div>
           </div>
@@ -25,7 +26,7 @@
       <%= 'City: ' + cart.city %><br>
       <%= 'State: ' + cart.state %><br>
       <%= 'Country: ' + cart.country %><br>
-      <%= 'Total Amount: $' + cart.total_amount.to_s %><br><br>
+      <%= 'Total Amount: ' + number_to_currency(cart.total_amount, unit: '$') %><br><br>
     </div>
   <% end %>
 </div>
