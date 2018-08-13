@@ -9,7 +9,7 @@ class CartCheckoutController < ApplicationController
   before_action :login_for_purchase, only: %i[purchase]
   before_action :authorize_user, only: %i[order_history]
   before_action :fetch_cart_item,
-                only: %i[update_cart_item_quantity destroy_cart_item]
+                only: %i[increment_cart_item_quantity decrement_cart_item_quantity destroy_cart_item]
   before_action :check_stock, only: %i[add_to_cart]
   before_action :check_stock_for_cart_items, only: %i[update]
 
@@ -48,9 +48,22 @@ class CartCheckoutController < ApplicationController
   end
 
   def update_cart_item_quantity
-    return if @cart_item.update(quantity: params[:updated_quantity])
-    message = @cart_item.errors.full_messages.join('<br>')
-    flash_ajax_message(message)
+  end
+
+  def increment_cart_item_quantity
+    if @cart_item.update(quantity: @cart_item.quantity + 1)
+      render :update_cart_item_quantity
+    else
+      flash_ajax_message(@cart_item.errors.full_messages.join('<br>'))
+    end
+  end
+
+  def decrement_cart_item_quantity
+    if @cart_item.update(quantity: @cart_item.quantity - 1)
+      render :update_cart_item_quantity
+    else
+      flash_ajax_message(@cart_item.errors.full_messages.join('<br>'))
+    end
   end
 
   def destroy_cart_item

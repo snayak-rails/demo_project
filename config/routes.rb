@@ -14,7 +14,8 @@ Rails.application.routes.draw do
 
   resources :cart_checkout, except: %i[show new create] do
     member do
-      put :update_cart_item_quantity
+      put :increment_cart_item_quantity
+      put :decrement_cart_item_quantity
       delete :destroy_cart_item
     end
     collection do

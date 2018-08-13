@@ -34,25 +34,26 @@
             <% else %>
               <li class="nav-item">
                 <%= link_to "Logout", logout_path,
-                  :id => "logout-link", :method => :get,
-                  class: "btn btn-primary", class: "nav-link" %>
+                  :id => "logout-link", :method => :get, class: "nav-link" %>
               </li>
-              <li class="nav-item">
-                <%= link_to "Profile", edit_user_path(current_user.id),
-                  :id => "profile-link", :method => :get,
-                  class: "btn btn-primary", class: "nav-link" %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Account
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <%= link_to "Profile", edit_user_path(current_user.id),
+                  :id => "profile-link", :method => :get, class: "dropdown-item" %>
+                  <% if current_user.role == Constants::ROLE_SELLER %>
+                    <%= link_to "Seller dashboard", seller_dashboard_products_path,
+                      :id => "seller_dashboard-link", :method => :get,
+                       class: "dropdown-item" %>
+                  <% end %>
+                </div>
               </li>
-              <% if current_user.role == Constants::ROLE_SELLER %>
-                <li class="nav-item">
-                  <%= link_to "Seller dashboard", seller_dashboard_products_path,
-                    :id => "seller_dashboard-link", :method => :get,
-                    class: "btn btn-primary", class: "nav-link" %>
-                </li>
-              <% end %>
             <% end %>
             <li class="nav-item">
                 <%= link_to "", cart_checkout_index_path,
-                  :id => "cart-link", :method => :get, class: "btn btn-primary",
+                  :id => "cart-link", :method => :get,
                    class: "nav-link fa fa-shopping-cart big" %>
             </li>
           </ul>

@@ -41,8 +41,11 @@ class UsersController < ApplicationController
   private
 
   def user_params
+    role = Constants::ROLE_SELLER if params['user']['role'] == '1'
+    role = Constants::ROLE_BUYER if params['user']['role'] == '0'
     params.require(:user).permit(:name, :gender, :email, :contact, :role,
                                  :password, :password_confirmation)
+                         .merge(role: role)
   end
 
   def fetch_user

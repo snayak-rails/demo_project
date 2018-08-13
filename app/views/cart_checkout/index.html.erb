@@ -10,17 +10,19 @@
       <h5 class="card-title"><%= product.title %></h5>
       <div id="<%= cart_item.id %>-price">
         Price: <%= number_to_currency(product.price * cart_item.quantity, unit: "$")%>
-      </div>
-      <div id="<%= cart_item.id %>" class="d-inline-block">
+      </div><br>
+      <%= link_to "+",
+          increment_cart_item_quantity_cart_checkout_path(cart_item.id), remote: true,
+          id: "add-quantity-button", method: :put,
+           class: "btn btn-outline-primary d-inline p-2" %>
+      <div id="<%= cart_item.id %>" class="d-inline p-2 bg-light">
         Quantity: <%= cart_item.quantity %>
       </div>
-      <div id="<%= cart_item.id %>-save" class="d-inline-block">
-        <%= form_tag(update_cart_item_quantity_cart_checkout_path(cart_item.id),
-          method: :put, remote: true) do %>
-        <%= number_field_tag :updated_quantity, nil, required: true %>
-        <%= submit_tag 'Save', class: "btn btn-success" %>
-        <% end %>
-      </div>
+      <%= link_to "-",
+          decrement_cart_item_quantity_cart_checkout_path(cart_item.id), remote: true,
+          id: "subtract-quantity-button", method: :put,
+           class: "btn btn-outline-primary d-inline p-2" %>
+      <br><br>
       <div>
           <%= button_to "Remove item",
           destroy_cart_item_cart_checkout_path(cart_item.id),
