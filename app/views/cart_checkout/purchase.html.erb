@@ -1,7 +1,5 @@
-<%= render partial: 'purchase_form' %>
-
 <% unless flash[:notice].blank? %>
   <%= flash[:notice].html_safe %>
 <% end %>
 
-
+<%= render partial: 'purchase_form' %>

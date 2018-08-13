@@ -1,8 +1,8 @@
 <h1>SignUp and Login</h1>
 
-<%= render partial: 'login_form' %>
-
 <% unless flash[:notice].blank? %>
   <%= flash[:notice].html_safe %>
 <% end %>
+
+<%= render partial: 'login_form' %>
 
