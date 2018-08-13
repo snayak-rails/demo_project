@@ -10,7 +10,6 @@ class SessionsController < ApplicationController
     user = User.find_by_email(params[:email])
     if user&.authenticate(params[:password])
       log_in user
-      flash[:notice] = 'Welcome ' + user.name
     else
       flash[:notice] = 'Enter correct email and password.'
     end

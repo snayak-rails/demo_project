@@ -54,7 +54,7 @@ class CartCheckoutController < ApplicationController
     if @cart_item.update(quantity: @cart_item.quantity + 1)
       render :update_cart_item_quantity
     else
-      flash_ajax_message(@cart_item.errors.full_messages.join('<br>'))
+      flash_ajax_error(@cart_item.errors.full_messages.join('<br>'))
     end
   end
 
@@ -62,7 +62,7 @@ class CartCheckoutController < ApplicationController
     if @cart_item.update(quantity: @cart_item.quantity - 1)
       render :update_cart_item_quantity
     else
-      flash_ajax_message(@cart_item.errors.full_messages.join('<br>'))
+      flash_ajax_error(@cart_item.errors.full_messages.join('<br>'))
     end
   end
 

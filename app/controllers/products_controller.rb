@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
   after_action :destroy_product_images, only: %i[destroy]
 
   def index
-    @products = Product.all.paginate(page: params[:page], per_page: 2)
+    @products = Product.all.paginate(page: params[:page], per_page: 12)
   end
 
   def show; end
@@ -28,7 +28,7 @@ class ProductsController < ApplicationController
       flash[:notice] = 'Product added!'
       redirect_to seller_dashboard_products_url
     else
-      flash_ajax_message(@product.errors.full_messages.join('<br>'))
+      flash_ajax_error(@product.errors.full_messages.join('<br>'))
     end
   end
 
@@ -40,7 +40,7 @@ class ProductsController < ApplicationController
       remove_images
       redirect_to edit_product_url(@product.id)
     else
-      flash_ajax_message(@product.errors.full_messages.join('<br>'))
+      flash_ajax_error(@product.errors.full_messages.join('<br>'))
     end
   end
 
@@ -49,13 +49,13 @@ class ProductsController < ApplicationController
       flash[:notice] = 'Product removed'
       redirect_to seller_dashboard_products_url
     else
-      flash_ajax_message(@product.errors.full_messages.join('<br>'))
+      flash_ajax_error(@product.errors.full_messages.join('<br>'))
     end
   end
 
   def seller_dashboard
     @seller_products = current_user.products.all
-                                   .paginate(page: params[:page], per_page: 2)
+                                   .paginate(page: params[:page], per_page: 12)
   end
 
   def searched_items

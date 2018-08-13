@@ -1,11 +1,12 @@
 <div class="container-fluid">
 
+  <br>
   <div id='flash'>
     <%= render partial: 'shared/flash',
     locals: {message: flash[:notice]} unless flash[:notice].blank? %>
   </div>
 
-  <%= render partial: 'modal_login' %><br><br>
+  <%= render partial: 'modal_login' %><br>
 
   <div id="products" >
     <%= render partial: 'products', locals: { item_collection: @products } %>

@@ -26,4 +26,9 @@ class ApplicationController < ActionController::Base
     flash.now[:notice] = message
     render file: 'shared/flash.js.erb'
   end
+
+  def flash_ajax_error(message)
+    flash.now[:notice] = message
+    render file: 'shared/flash_error.js.erb'
+  end
 end
