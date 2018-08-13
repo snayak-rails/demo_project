@@ -52,9 +52,13 @@
               </li>
             <% end %>
             <li class="nav-item">
-                <%= link_to "", cart_checkout_index_path,
+                <%= link_to cart_checkout_index_path,
                   :id => "cart-link", :method => :get,
-                   class: "nav-link fa fa-shopping-cart big" %>
+                   class: "nav-link fa fa-shopping-cart big" do %>
+                   <span class="badge badge-light small">
+                <%= current_cart.blank? ? 0.to_s : current_cart.cart_items.count.to_s %>
+                   </span>
+                <% end %>
             </li>
           </ul>
           <%# binding.pry %>

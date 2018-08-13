@@ -129,7 +129,7 @@ class CartCheckoutController < ApplicationController
 
   def create_cart_item
     @cart_item = CartItem.create(cart_item_params)
-    flash_ajax_message('Item added to cart')
+    redirect_to cart_checkout_index_url
   end
 
   def login_for_purchase

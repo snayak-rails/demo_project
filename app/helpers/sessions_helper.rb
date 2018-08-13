@@ -35,4 +35,14 @@ module SessionsHelper
     session.delete(:cart_id)
     @current_temp_cart = nil
   end
+
+  def current_cart
+    if logged_in?
+      @cart = Cart.where(
+        'user_id = ? AND is_paid = ?', current_user.id, false
+      ).take
+    else
+      current_temp_cart
+    end
+  end
 end
