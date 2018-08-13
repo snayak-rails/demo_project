@@ -16,7 +16,11 @@ class UsersController < ApplicationController
     if @user.save
       log_in @user
       flash[:notice] = 'Welcome ' + @user.name
-      redirect_to products_url
+      if @user.role == Constants::ROLE_SELLER
+        redirect_to seller_dashboard_products_url
+      else
+        redirect_to products_url
+      end
     else
       flash[:notice] = @user.errors.full_messages.join('<br>')
       redirect_to new_user_url
@@ -38,7 +42,7 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :gender, :email, :contact, :role,
-                                 :password)
+                                 :password, :password_confirmation)
   end
 
   def fetch_user

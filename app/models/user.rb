@@ -8,8 +8,9 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true,
                     format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :contact, numericality: true, length: { minimum: 12 }
-  validates :password_digest, presence: true, length: { minimum: 3 }
+  validates :contact, numericality: true, length: { minimum: 10 }
+  validates :password, presence: true, length: { minimum: 6 }
+  validates_confirmation_of :password
 
   has_secure_password
 end
