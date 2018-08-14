@@ -43,7 +43,7 @@ class CartCheckoutController < ApplicationController
       flash[:notice] = 'Order confirmed!'
       redirect_to cart_checkout_index_url
     else
-      flash_ajax_message(@cart.errors.full_messages.join('<br>'))
+      flash_ajax_error(@cart.errors.full_messages.join('<br>'))
     end
   end
 
