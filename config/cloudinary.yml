@@ -1,0 +1,9 @@
+development:
+  cloud_name: "soubhagya-cloud"
+  api_key: "719195419539882"
+  api_secret: "7tS2HWguYGrUjbHuROfIfuD2sxk"
+
+production:
+  cloud_name: "soubhagya-cloud"
+  api_key: "719195419539882"
+  api_secret: "7tS2HWguYGrUjbHuROfIfuD2sxk"
