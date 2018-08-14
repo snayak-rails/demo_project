@@ -20,6 +20,10 @@
 //= require jquery.loading.block
 //= require_tree .
 
-// $(document).ajaxStart(function() {
-//   alert('before request');
-// });
+$(document).ready(function() {
+  $.loadingBlockShow();
+
+  $(".container-fluid").ready(function($) {
+    $.loadingBlockHide();
+  });
+});
