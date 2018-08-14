@@ -20,12 +20,14 @@
 //= require jquery.loading.block
 //= require_tree .
 
-// $(document).ready(function() {
-//   $.loadingBlockShow();
-
-//   $(".container-fluid").ready(function($) {
-//     $.loadingBlockHide();
-//   });
-// });
+$(document).ready(function() {
+  $(document)
+    .bind("ajax:beforeSend", function () {
+      $.loadingBlockShow();
+    })
+    .bind("ajax:complete", function () {
+      $.loadingBlockHide();
+    });
+});
 
 
