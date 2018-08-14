@@ -47,10 +47,6 @@
     :id => "purchase-cart-button", :method => :get, remote: true %>
 
 <div id='purchase-form' ></div><br>
-<% if current_user %>
-  <%= button_to "Order history", order_history_cart_checkout_index_path,
-    :id => "order-history-button", :method => :get, class: "btn btn-info" %><br>
-<% end %>
 
 </div>
 

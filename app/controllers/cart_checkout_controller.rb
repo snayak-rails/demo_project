@@ -5,7 +5,7 @@ class CartCheckoutController < ApplicationController
   include SessionsHelper
   include Buyable
 
-  before_action :fetch_cart
+  before_action :fetch_cart, except: %i[order_history]
   before_action :login_for_purchase, only: %i[purchase]
   before_action :authorize_user, only: %i[order_history]
   before_action :fetch_cart_item,
