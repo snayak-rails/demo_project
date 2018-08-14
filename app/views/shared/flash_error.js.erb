@@ -1,2 +1,3 @@
 $("#flash")
-.html("<%= j(render partial: 'shared/flash_error', locals: {message: flash[:notice]}) %>")
+.html("<%= j(render partial: 'shared/flash_error', locals: {message: flash[:notice]}) %>");
+window.scrollTo(0,0);

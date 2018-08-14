@@ -1,4 +1,9 @@
-$('#products')
-.html("<%= j(render partial: 'products', locals: { item_collection: @products }) %>")
+$(document).ready(function() {
+  $.loadingBlockShow();
+  $('#products')
+    .html("<%= j(render partial: 'products', locals: { item_collection: @products }) %>")
 
-$('.pagination a').attr('data-remote', 'true');
+  $('.pagination a').attr('data-remote', 'true');
+  alert('loading');
+  $.loadingBlockHide();
+});

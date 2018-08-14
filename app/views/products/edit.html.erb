@@ -7,7 +7,8 @@
       locals: {message: flash[:notice]} unless flash[:notice].blank? %>
   </div>
 
-  <%= form_for(@product, html: { multipart: true }, remote: true) do |f| %>
+  <%= form_for(@product, html: { multipart: true }, remote: true,
+      id: 'edit-product-form') do |f| %>
 
     <div class="form-group row">
       <%= f.label :title, "Title:", class: "col-sm-2 col-form-label" %>

@@ -1,5 +1,5 @@
 <%= form_for @cart, url: cart_checkout_path(@cart.id), class: "form-horizontal center",
-     method: :put, remote: true do |f| %>
+     method: :put, remote: true, id: 'form-purchase' do |f| %>
 
     <div class="form-group row">
       <%= f.label :name, "Name:", class: "col-sm-2 col-form-label" %>

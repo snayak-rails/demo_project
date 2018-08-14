@@ -1,6 +1,10 @@
-$('#products')
+$(document).ready(function() {
+  $.loadingBlockShow();
+  $('#products')
   .html(
     "<%= j (render partial: 'products', locals: {item_collection: @searched_items}) unless @searched_items.blank? %>"
     + "<%= flash[:notice] %>")
 
-$('.pagination a').attr('data-remote', 'true');
+  $('.pagination a').attr('data-remote', 'true');
+  $.loadingBlockHide();
+});

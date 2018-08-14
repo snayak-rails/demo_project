@@ -8,7 +8,7 @@
 ;(function ($) {
     $.loadingBlockShow = function(opts) {
         var defaults = {
-            imgPath: '/assets/icon.gif',
+            imgPath:'/assets/icon.gif',
             imgStyle: {
                 width: 'auto',
                 textAlign: 'center',

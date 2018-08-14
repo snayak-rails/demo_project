@@ -20,10 +20,12 @@
 //= require jquery.loading.block
 //= require_tree .
 
-$(document).ready(function() {
-  $.loadingBlockShow();
+// $(document).ready(function() {
+//   $.loadingBlockShow();
 
-  $(".container-fluid").ready(function($) {
-    $.loadingBlockHide();
-  });
-});
+//   $(".container-fluid").ready(function($) {
+//     $.loadingBlockHide();
+//   });
+// });
+
+
