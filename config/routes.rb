@@ -29,5 +29,5 @@ Rails.application.routes.draw do
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'
 
-  get '*path' => 'application#not_found'
+  # get '*path' => 'application#not_found'
 end

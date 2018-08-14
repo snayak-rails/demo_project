@@ -73,5 +73,15 @@
 
     <%= yield %>
 
+    <script>
+      $.loadingBlockShow();
+    </script>
+
+    <script>
+    $(document).ready(function() {
+      $.loadingBlockHide();
+      });
+    </script>
+
   </body>
 </html>
