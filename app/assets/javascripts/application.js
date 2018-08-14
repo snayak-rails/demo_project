@@ -19,3 +19,7 @@
 //= require turbolinks
 //= require jquery.loading.block
 //= require_tree .
+
+// $(document).ajaxStart(function() {
+//   alert('before request');
+// });
