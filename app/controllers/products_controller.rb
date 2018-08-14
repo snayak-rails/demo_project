@@ -38,7 +38,7 @@ class ProductsController < ApplicationController
     if @product.update_attributes(product_params)
       add_product_images
       remove_images
-      redirect_to edit_product_url(@product.id)
+      redirect_to seller_dashboard_products_url
     else
       flash_ajax_error(@product.errors.full_messages.join('<br>'))
     end
