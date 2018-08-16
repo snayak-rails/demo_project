@@ -7,8 +7,11 @@
            src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
             alt="Image not available">
         </div>
-        <% if logged_in? && current_user.role == Constants::ROLE_SELLER %>
-          <%= render partial: 'card_body_seller', locals: {product: product} %>
+        <% if params[:controller] == 'products' &&
+              params[:action] == 'seller_dashboard' %>
+          <% if logged_in? && current_user.role == Constants::ROLE_SELLER %>
+            <%= render partial: 'card_body_seller', locals: {product: product} %>
+          <% end %>
         <% else %>
           <%= render partial: 'card_body', locals: {product: product} %>
         <% end %>
