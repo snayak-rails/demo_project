@@ -35,9 +35,10 @@ class ProductsController < ApplicationController
     if @product.save
       add_product_images
       flash[:notice] = 'Product added!'
-      redirect_to seller_dashboard_products_url
+      redirect_to seller_dashboard_products_path
     else
-      flash_ajax_error(@product.errors.full_messages.join('<br>'))
+      flash[:error] = @product.errors.full_messages.join('<br>')
+      redirect_to new_product_path
     end
   end
 
@@ -47,21 +48,21 @@ class ProductsController < ApplicationController
     if @product.update_attributes(product_params)
       add_product_images
       remove_images
-      redirect_to seller_dashboard_products_url
+      flash[:notice] = 'Product updated successfully!'
+      redirect_to seller_dashboard_products_path
     else
       flash[:error] = @product.errors.full_messages.join('<br>')
-      redirect_to edit_product_url(@product.id)
-      # flash_ajax_error(@product.errors.full_messages.join('<br>'))
+      redirect_to edit_product_path(@product.id)
     end
   end
 
   def destroy
     if @product.destroy
       flash[:notice] = 'Product removed'
-      redirect_to seller_dashboard_products_url
     else
-      flash_ajax_error(@product.errors.full_messages.join('<br>'))
+      flash[:error] = @product.errors.full_messages.join('<br>')
     end
+    redirect_to seller_dashboard_products_path
   end
 
   def seller_dashboard
