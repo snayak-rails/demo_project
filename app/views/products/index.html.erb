@@ -1,6 +1,10 @@
 <div class="container-fluid">
 
   <br>
+  <div id='flash_error'>
+    <%= render partial: 'shared/flash_error',
+    locals: {message: flash[:error]} unless flash[:error].blank? %>
+  </div>
   <div id='flash'>
     <%= render partial: 'shared/flash',
     locals: {message: flash[:notice]} unless flash[:notice].blank? %>

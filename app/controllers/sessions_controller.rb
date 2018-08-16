@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       log_in user
     else
-      flash[:notice] = 'Enter correct email and password.'
+      flash[:error] = 'Enter correct email and password.'
     end
     redirect_to products_url
   end
