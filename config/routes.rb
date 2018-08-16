@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   resources :users, except: %i[index]
   resources :products do
     collection do
-      get :searched_items
       get :seller_dashboard
     end
   end

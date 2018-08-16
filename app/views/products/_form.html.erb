@@ -42,6 +42,7 @@
   <% end %>
   <span style="color:black"> You can select multiple images. </span><br><br>
 
-  <%= f.submit yield(:button_text), class: "btn btn-success" %><br>
+  <%= f.submit yield(:button_text), class: "btn btn-success",
+   id: 'product-form-submit' %><br>
 
 <% end %>

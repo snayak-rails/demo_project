@@ -1,0 +1,18 @@
+<div class="col-sm-3 col-md-4 col-xs-12 col-lg-3">
+  <div class="card-deck">
+    <div class="card border-success mb-3">
+      <%= link_to product, class: 'product-card' do %>
+        <div class="product-image">
+          <img class="card-img-top product-image"
+           src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
+            alt="Image not available">
+        </div>
+        <% if logged_in? && current_user.role == Constants::ROLE_SELLER %>
+          <%= render partial: 'card_body_seller', locals: {product: product} %>
+        <% else %>
+          <%= render partial: 'card_body', locals: {product: product} %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

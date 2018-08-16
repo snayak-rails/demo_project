@@ -3,12 +3,5 @@
 
   <% provide(:button_text, "Create") %>
 
-  <% unless flash[:notice].blank? %>
-    <div class="alert alert-danger" role="alert">
-      <button class="close" data-dismiss="alert">×</button>
-      <%= flash[:notice].html_safe %>
-    </div>
-  <% end %><br><br>
-
   <%= render 'form' %>
 </div>

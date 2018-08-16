@@ -22,7 +22,7 @@ class UsersController < ApplicationController
         redirect_to products_url
       end
     else
-      flash[:notice] = @user.errors.full_messages.join('<br>')
+      flash[:error] = @user.errors.full_messages.join('<br>')
       redirect_to new_user_url
     end
   end
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     if @user.update_attributes(user_params)
       redirect_to products_url
     else
-      flash[:notice] = @user.errors.full_messages.join('<br>')
+      flash[:error] = @user.errors.full_messages.join('<br>')
       redirect_to edit_user_url(@user.id)
     end
   end

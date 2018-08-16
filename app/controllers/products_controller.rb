@@ -3,6 +3,7 @@
 # Contains logic for displaying products and actions for seller
 class ProductsController < ApplicationController
   include SessionsHelper
+  include ApplicationHelper
   before_action :fetch_product,
                 except: %i[index new create seller_dashboard searched_items]
   before_action :authorize_user, except: %i[index show searched_items]
@@ -11,7 +12,15 @@ class ProductsController < ApplicationController
   after_action :destroy_product_images, only: %i[destroy]
 
   def index
-    @products = Product.all.paginate(page: params[:page], per_page: 12)
+    respond_to do |format|
+      format.html do
+        @products = Product.all.paginate(page: params[:page], per_page: 12)
+      end
+      format.js do
+        @products = Product.searched_items(params[:search])
+        @products = @products.paginate(page: params[:page], per_page: 12)
+      end
+    end
   end
 
   def show; end
@@ -40,6 +49,8 @@ class ProductsController < ApplicationController
       remove_images
       redirect_to seller_dashboard_products_url
     else
+      # flash[:error] = @product.errors.full_messages.join('<br>')
+      # redirect_to edit_product_url(@product.id)
       flash_ajax_error(@product.errors.full_messages.join('<br>'))
     end
   end
@@ -58,14 +69,6 @@ class ProductsController < ApplicationController
                                    .paginate(page: params[:page], per_page: 12)
   end
 
-  def searched_items
-    @searched_items = Product.where('title ILIKE ? OR category ILIKE ?',
-                                    "%#{params[:search]}%", "%#{params[:search]}%")
-    @searched_items = @searched_items.paginate(page: params[:page], per_page: 2)
-    return unless @searched_items.blank?
-    flash_ajax_message('No products found.')
-  end
-
   private
 
   def authorize_seller
@@ -78,7 +81,7 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
     @product_images = @product.product_images.all
   rescue ActiveRecord::RecordNotFound => e
-    flash[:notice] = e.message
+    flash[:error] = e.message
     redirect_to products_url
   end
 

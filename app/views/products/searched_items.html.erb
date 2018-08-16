@@ -1,6 +1,0 @@
-<% unless flash[:notice].blank? %>
-  <%= flash[:notice].html_safe %>
-<% end %><br><br>
-
-<%= render partial: 'products',
- locals: {item_collection: @searched_items} %>

@@ -1,7 +1,5 @@
 <div class="container-fluid"><br>
 
-  <%= render partial: 'modal_login' %>
-
   <% @product_images.each do |product_image| %>
     <figure class="figure">
       <%= image_tag (product_image.image).url, class: "figure-img img-fluid rounded",
@@ -18,11 +16,6 @@
       <p class="card-text">Price: $<%= @product.price.to_s %></p>
     </div>
   </div><br>
-
-    <div id='flash'>
-      <%= render partial: 'shared/flash',
-      locals: {message: flash[:notice]} unless flash[:notice].blank? %>
-    </div>
 
     <%= button_to "Add to Cart",
       add_to_cart_cart_checkout_index_path(product_id: @product.id),

@@ -25,6 +25,7 @@
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login-modal">
                     Login & Signup
                   </button>
+                  <%= render partial: 'layouts/modal_login' %><br>
               </li>
             <% else %>
               <li class="nav-item dropdown">
@@ -59,7 +60,7 @@
           </ul>
           <%# binding.pry %>
           <% if params[:controller] == 'products' && params[:action] == 'index' %>
-            <%= form_tag searched_items_products_path, method: :get, remote: true,
+            <%= form_tag products_path, method: :get, remote: true,
                 class: "form-inline my-2 my-lg-0" do %>
               <%= text_field_tag :search, nil, required: true,
                class: "form-control mr-sm-2",
@@ -69,19 +70,18 @@
           <% end %>
         </div>
       </nav>
+
+      <div id='flash_error'>
+        <%= render partial: 'shared/flash_error',
+        locals: {message: flash[:error]} unless flash[:error].blank? %>
+      </div>
+      <div id='flash'>
+        <%= render partial: 'shared/flash',
+        locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+      </div>
     </header>
 
     <%= yield %>
-
-    <!-- <script>
-      $.loadingBlockShow();
-    </script>
-
-    <script>
-      $(".container fluid").ready(function($) {
-        $.loadingBlockHide();
-      });
-    </script> -->
 
   </body>
 </html>

@@ -1,9 +1,1 @@
-$(document).ready(function() {
-  $.loadingBlockShow();
-  $('#products')
-    .html("<%= j(render partial: 'products', locals: { item_collection: @products }) %>")
-
-  $('.pagination a').attr('data-remote', 'true');
-  alert('loading');
-  $.loadingBlockHide();
-});
+$('#products').html("<%= j(render partial: 'products') %>")

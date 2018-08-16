@@ -17,17 +17,6 @@
 //= require bootstrap-sprockets
 //= require activestorage
 //= require turbolinks
-//= require jquery.loading.block
-//= require_tree .
-
-$(document).ready(function() {
-  $(document)
-    .bind("ajax:beforeSend", function () {
-      $.loadingBlockShow();
-    })
-    .bind("ajax:complete", function () {
-      $.loadingBlockHide();
-    });
-});
-
-
+//= require custom.js
+//= require blockUI.js
+//= require_tree

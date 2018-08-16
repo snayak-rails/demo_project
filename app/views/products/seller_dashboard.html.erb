@@ -3,41 +3,9 @@
 <%= link_to " Add product", new_product_path, class: "btn btn-primary fa fa-plus-circle",
     :id => "add-product-button", :method => :get %><br><br>
 
-  <div id="flash">
-    <%= render partial: 'shared/flash',
-    locals: {message: flash[:notice]} unless flash[:notice].blank? %>
-  </div>
-
 <div class="row">
   <% @seller_products.each do |product| %>
-    <div class="col-sm-3 col-md-4 col-xs-12 col-lg-3">
-      <div class="card-deck">
-        <div class="card border-success mb-3">
-          <%# binding.pry %>
-          <img class="card-img-top"
-           src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
-           alt="Image not available" style="height: 170px;">
-          <div class="card-body">
-            <h5 class="card-title"><%= product.title %></h5>
-            <p class="card-text"><%= product.description %></p>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">Category: <%= product.category %></li>
-              <li class="list-group-item">Price: $<%= product.price %></li>
-              <li class="list-group-item">Stock: <%= product.stock %></li>
-            </ul><br>
-            <div class="btn-toolbar">
-            <%= link_to "", edit_product_path(product.id),
-               class: "btn btn-info btn-space fa fa-pencil reg",
-               :id => "edit-product-button", :method => :get %>
-            <%= link_to "", product_path(product.id),
-               class: "btn btn-danger btn-space fa fa-trash reg",
-               :id => "delete-product-button", :method => :delete,
-                data: { confirm: 'Are you sure?' } %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <%= render partial: 'product_card', locals: {product: product} %>
   <% end %>
 </div>
 

@@ -1,5 +1,6 @@
 @import "bootstrap";
 @import "font-awesome";
+@import "products";
 
 .btn-space {
     margin-right: 5px;
@@ -15,29 +16,4 @@
 
 .badge.small {
   font-size: 12px
-}
-
-.pagination {
-  .previous_page { background:#7777ff; color:white }
-  .previous_page.disabled { background: white; color: #777 }
-  .current { background: yellow }
-  .next_page { background: #7777ff; color: white }
-  .next_page.disabled { background: white; color: #777 }
-}
-
-a:link.product-card{
-  color:black;
-  text-decoration:none;
-}
-a:visited.product-card{
-  color:black;
-  text-decoration:none;
-}
-a:hover.product-card{
-  color:black;
-  text-decoration:none;
-}
-a:active.product-card{
-  color:black;
-  text-decoration:none;
 }

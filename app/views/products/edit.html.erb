@@ -2,11 +2,6 @@
   <h3>Edit product details</h3>
   <br>
 
-  <div id="flash">
-    <%= render partial: 'shared/flash',
-      locals: {message: flash[:notice]} unless flash[:notice].blank? %>
-  </div>
-
   <%= form_for(@product, html: { multipart: true }, remote: true,
       id: 'edit-product-form') do |f| %>
 

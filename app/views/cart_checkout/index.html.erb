@@ -1,13 +1,6 @@
 <div class="container-fluid">
   <h3>Cart</h3>
 
-  <%= render partial: 'products/modal_login' %>
-
-  <div id='flash'>
-  <%= render partial: 'shared/flash',
-  locals: {message: flash[:notice]} unless flash[:notice].blank? %>
-  </div>
-
 <% @cart_items.each do |cart_item| %>
   <% product = Product.find(cart_item.product_id) %>
   <div class="card">
