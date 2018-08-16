@@ -5,9 +5,11 @@
         <div class="card border-success mb-3">
           <%= link_to product, class: 'product-card' do %>
           <%# binding.pry %>
-          <img class="card-img-top"
-           src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
-            alt="Image not available" style="height: 170px;">
+          <div style="height: 170px;">
+            <img class="card-img-top"
+             src="<%= product.product_images.first.image.url unless product.product_images.blank? %>"
+              alt="Image not found" style="height: 170px;">
+          </div>
           <div class="card-body">
             <h5 class="card-title"><%= product.title %></h5>
             <p class="card-text"><%= product.description %></p>
