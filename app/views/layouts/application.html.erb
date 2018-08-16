@@ -58,7 +58,6 @@
                 <% end %>
             </li>
           </ul>
-          <%# binding.pry %>
           <% if params[:controller] == 'products' && params[:action] == 'index' %>
             <%= form_tag products_path, method: :get, remote: true,
                 class: "form-inline my-2 my-lg-0" do %>

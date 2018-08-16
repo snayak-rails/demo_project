@@ -42,6 +42,26 @@
   <% end %>
   <span style="color:black"> You can select multiple images. </span><br><br>
 
+  <% if params[:action] == 'edit' %>
+    <% if @product_images.blank? %>
+      <h5>No images added yet.</h5><br>
+    <% else %>
+      <div class="container-fluid">
+        <h5>Select product images to remove: </h5><br>
+        <% @product_images.each do |product_image| %>
+          <div class="container">
+          <figure class="figure">
+            <%= image_tag (product_image.image).url,
+             class: "figure-img img-fluid rounded",
+            alt: "Image not available" %>
+          </figure>
+          <%= check_box_tag('image_ids[]' ,product_image.id) %>
+          </div>
+        <% end %><br>
+      </div>
+    <% end %>
+  <% end %>
+
   <%= f.submit yield(:button_text), class: "btn btn-success",
    id: 'product-form-submit' %><br>
 

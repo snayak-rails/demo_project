@@ -49,9 +49,9 @@ class ProductsController < ApplicationController
       remove_images
       redirect_to seller_dashboard_products_url
     else
-      # flash[:error] = @product.errors.full_messages.join('<br>')
-      # redirect_to edit_product_url(@product.id)
-      flash_ajax_error(@product.errors.full_messages.join('<br>'))
+      flash[:error] = @product.errors.full_messages.join('<br>')
+      redirect_to edit_product_url(@product.id)
+      # flash_ajax_error(@product.errors.full_messages.join('<br>'))
     end
   end
 

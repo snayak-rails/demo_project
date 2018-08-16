@@ -1,5 +1,5 @@
 <% if @products.blank? %>
-  <%= render partial: 'shared/flash', locals: {message: 'No products'} %>
+  <%= render partial: 'shared/flash', locals: {message: 'Sorry, no products found.'} %>
 <% else %>
   <div class="row">
     <% @products.each do |product| %>
