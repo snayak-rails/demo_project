@@ -3,6 +3,7 @@
 # Contains logic for user-login and logout
 class SessionsController < ApplicationController
   include SessionsHelper
+  include Redirection
 
   def new; end
 
@@ -11,10 +12,11 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       log_in user
       flash[:notice] = 'Welcome ' + user.name
+      redirect_by_role user
     else
       flash[:error] = 'Enter correct email and password.'
+      redirect_to products_path
     end
-    redirect_to products_path
   end
 
   def destroy

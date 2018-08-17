@@ -14,7 +14,7 @@ class CartCheckoutController < ApplicationController
   before_action :cart_items_in_stock?, only: %i[update]
 
   def index
-    @cart.destroy_cart_items_for_nil_product
+    @cart.destroy_cart_items_for_deleted_products
     @cart_items = @cart.cart_items.all
     @total_amount = @cart.total_amount unless @cart_items.blank?
   end
@@ -44,7 +44,7 @@ class CartCheckoutController < ApplicationController
       @cart.update_cart_items
       flash[:success] = 'Order confirmed!'
     else
-      flash[:error] += @cart.errors.full_messages.join('<br>')
+      flash[:error] = @cart.errors.full_messages.join('<br>')
     end
     redirect_to cart_checkout_index_path
   end

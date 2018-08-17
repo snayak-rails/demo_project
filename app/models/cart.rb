@@ -41,7 +41,7 @@ class Cart < ApplicationRecord
     end
   end
 
-  def destroy_cart_items_for_nil_product
+  def destroy_cart_items_for_deleted_products
     return if cart_items.blank?
     cart_items.all.each do |cart_item|
       CartItem.destroy(cart_item.id) unless Product.exists?(id: cart_item.product_id)

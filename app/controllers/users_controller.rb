@@ -3,6 +3,7 @@
 # User creation and profile settings
 class UsersController < ApplicationController
   include SessionsHelper
+  include Redirection
 
   before_action :authorize_user, except: %i[new create]
   before_action :fetch_user, except: %i[new create]
@@ -16,11 +17,7 @@ class UsersController < ApplicationController
     if @user.save
       log_in @user
       flash[:notice] = 'Welcome ' + @user.name
-      if @user.role == Constants::ROLE_SELLER
-        redirect_to seller_dashboard_products_url
-      else
-        redirect_to products_path
-      end
+      redirect_by_role @user
     else
       flash[:error] = @user.errors.full_messages.join('<br>')
       redirect_to new_user_path
