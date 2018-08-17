@@ -1,13 +1,9 @@
-<% if @products.blank? %>
-  <%= render partial: 'shared/flash' %>
-<% else %>
-  <div class="row">
-    <% @products.each do |product| %>
-      <%= render partial: 'product_card', locals: {product: product} %>
-    <% end %>
-  </div>
 
-  <%= will_paginate @products,
-   renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer %>
+<div class="row">
+  <% @products.each do |product| %>
+    <%= render partial: 'product_card', locals: {product: product} %>
+  <% end %>
+</div>
 
-<% end %>
+<%= will_paginate @products,
+ renderer: WillPaginate::ActionView::Bootstrap4LinkRenderer %>

@@ -6,7 +6,7 @@ class Cart < ApplicationRecord
   has_many :cart_items, dependent: :destroy
 
   scope :active_cart, lambda { |user_id|
-    where('user_id = ? AND is_paid = ?', user_id, false).take
+    where('user_id = ? AND is_paid = ?', user_id, false)
   }
   scope :paid_carts, -> { where('is_paid = ?', true) }
 
@@ -42,6 +42,7 @@ class Cart < ApplicationRecord
   end
 
   def destroy_cart_items_for_nil_product
+    return if cart_items.blank?
     cart_items.all.each do |cart_item|
       CartItem.destroy(cart_item.id) unless Product.exists?(id: cart_item.product_id)
     end

@@ -1,1 +1,6 @@
-$('#products').html("<%= j(render partial: 'products') %>")
+<% if @products.blank? %>
+  $('#flash')
+      .html("<%= j(render partial: 'shared/flash') %>")
+<% else %>
+  $('#products').html("<%= j(render partial: 'products') %>")
+<% end %>

@@ -38,8 +38,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def update
-    if cart_items_in_stock?
-    elsif @cart.update_attributes(cart_params)
+    if @cart.update_attributes(cart_params)
       remove_temp_cart_id
       @cart.update_cart_items
       flash[:success] = 'Order confirmed!'
@@ -103,7 +102,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def fetch_current_user_cart
-    @cart = Cart.active_cart(current_user.id)
+    @cart = Cart.active_cart(current_user.id).take
     @cart.blank? ? create_cart : @cart
   end
 
