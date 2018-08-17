@@ -6,12 +6,12 @@ class Product < ApplicationRecord
   has_many :cart_items
   has_many :product_images, dependent: :destroy
 
-  scope :searched_items, ->(searched_keyword) do
-                           where('title ILIKE ? OR category ILIKE ?',
-                                 "%#{searched_keyword}%", "%#{searched_keyword}%")
-                         end
+  scope :searched_items, lambda { |searched_keyword|
+    where('title ILIKE ? OR category ILIKE ?',
+          "%#{searched_keyword}%", "%#{searched_keyword}%")
+  }
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 15 }
   validates :category, presence: true, length: { maximum: 15 }
   validates_numericality_of :price, presence: true,
                                     greater_than_or_equal_to: 0

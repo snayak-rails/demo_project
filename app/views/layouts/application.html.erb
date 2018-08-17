@@ -33,7 +33,7 @@
                   <%= current_user.name.split(' ')[0] %>
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <%= link_to "Profile", edit_user_path(current_user.id),
+                  <%= link_to "Profile", edit_user_path(current_user),
                   :id => "profile-link", :method => :get, class: "dropdown-item" %>
                   <% if current_user.role == Constants::ROLE_SELLER %>
                     <%= link_to "Seller dashboard", seller_dashboard_products_path,
@@ -70,13 +70,8 @@
         </div>
       </nav>
 
-      <div id='flash_error'>
-        <%= render partial: 'shared/flash_error',
-        locals: {message: flash[:error]} unless flash[:error].blank? %>
-      </div>
       <div id='flash'>
-        <%= render partial: 'shared/flash',
-        locals: {message: flash[:notice]} unless flash[:notice].blank? %>
+        <%= render partial: 'shared/flash' %>
       </div>
     </header>
 

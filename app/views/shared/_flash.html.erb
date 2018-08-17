@@ -1,4 +1,16 @@
-<div class="alert alert-primary" role="alert">
-  <button class="close" data-dismiss="alert">×</button>
-  <%= message.html_safe unless message.blank? %>
-</div>
+<% if flash[:notice] %>
+  <div class="alert alert-primary" role="alert">
+    <button class="close" data-dismiss="alert">×</button>
+    <%= flash[:notice].html_safe %>
+  </div>
+<% elsif flash[:success] %>
+  <div class="alert alert-success" role="alert">
+    <button class="close" data-dismiss="alert">×</button>
+    <%= flash[:success].html_safe %>
+  </div>
+<% elsif flash[:error] %>
+  <div class="alert alert-danger" role="alert">
+    <button class="close" data-dismiss="alert">×</button>
+    <%= flash[:error].html_safe %>
+  </div>
+<% end %>

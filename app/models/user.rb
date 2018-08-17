@@ -2,8 +2,8 @@
 
 # model for user
 class User < ApplicationRecord
-  has_many :carts
-  has_many :products
+  has_many :carts, dependent: :destroy
+  has_many :products, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true,

@@ -3,15 +3,14 @@
 # Cart logic for cart items and orders
 class CartCheckoutController < ApplicationController
   include SessionsHelper
-  include Buyable
+  include Available
 
   before_action :fetch_cart, except: %i[order_history]
-  before_action :login_for_purchase, only: %i[purchase]
   before_action :authorize_user, only: %i[order_history]
   before_action :fetch_cart_item,
                 only: %i[increment_cart_item_quantity decrement_cart_item_quantity destroy_cart_item]
-  before_action :check_stock, only: %i[add_to_cart]
-  before_action :check_stock_for_cart_items, only: %i[update]
+  before_action :stock_available?, only: %i[add_to_cart]
+  before_action :cart_items_in_stock?, only: %i[update]
 
   def index
     @cart.destroy_cart_items_for_nil_product
@@ -20,7 +19,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def order_history
-    @user_carts = current_user.carts.where('is_paid = ?', true)
+    @user_carts = current_user.carts.paid_carts
   end
 
   def add_to_cart
@@ -28,51 +27,51 @@ class CartCheckoutController < ApplicationController
     @cart_item = CartItem.where('cart_id = ? AND product_id = ?',
                                 @cart.id, product_id).take
     return create_cart_item if @cart_item.blank?
-    flash_ajax_message('Item already added to cart.')
+    flash[:notice] = 'Item already added to cart.'
+    redirect_to product_path(product_id)
   end
 
   def purchase
     @cart_items = @cart.cart_items.all
-    return flash_ajax_message('Your cart is empty.') if @cart_items.blank?
+    return flash.now[:notice] = 'Your Cart is empty.' if @cart_items.blank?
+    flash.now[:notice] = 'Please login to continue purchase.' unless logged_in?
   end
 
   def update
-    if @cart.update_attributes(cart_params)
+    if cart_items_in_stock?
+    elsif @cart.update_attributes(cart_params)
       remove_temp_cart_id
       @cart.update_cart_items
-      flash[:notice] = 'Order confirmed!'
-      redirect_to cart_checkout_index_url
+      flash[:success] = 'Order confirmed!'
     else
-      flash_ajax_error(@cart.errors.full_messages.join('<br>'))
+      flash[:error] += @cart.errors.full_messages.join('<br>')
     end
+    redirect_to cart_checkout_index_path
   end
 
-  def update_cart_item_quantity
-  end
+  def update_cart_item_quantity; end
 
   def increment_cart_item_quantity
-    if @cart_item.update(quantity: @cart_item.quantity + 1)
-      render :update_cart_item_quantity
-    else
-      flash_ajax_error(@cart_item.errors.full_messages.join('<br>'))
-    end
+    update_succeeded = @cart_item.update(quantity: @cart_item.quantity + 1)
+    message = @cart_item.errors.full_messages.join('<br>')
+    flash[:error] = message unless update_succeeded
+    render :update_cart_item_quantity
   end
 
   def decrement_cart_item_quantity
-    if @cart_item.update(quantity: @cart_item.quantity - 1)
-      render :update_cart_item_quantity
-    else
-      flash_ajax_error(@cart_item.errors.full_messages.join('<br>'))
-    end
+    update_succeeded = @cart_item.update(quantity: @cart_item.quantity - 1)
+    message = @cart_item.errors.full_messages.join('<br>')
+    flash[:error] = message unless update_succeeded
+    render :update_cart_item_quantity
   end
 
   def destroy_cart_item
-    redirect_to cart_checkout_index_url if @cart_item.destroy
-    flash[:notice] = @cart_item.errors.full_messages.join('<br>')
+    @cart_item.destroy
+    redirect_to cart_checkout_index_path
   end
 
   def destroy
-    flash[:notice] = @cart.errors.full_messages.join('<br>') unless @cart.destroy
+    @cart.destroy
   end
 
   private
@@ -104,8 +103,7 @@ class CartCheckoutController < ApplicationController
   end
 
   def fetch_current_user_cart
-    @cart = Cart.where('user_id = ? AND is_paid = ?',
-                       current_user.id, false).take
+    @cart = Cart.active_cart(current_user.id)
     @cart.blank? ? create_cart : @cart
   end
 
@@ -129,11 +127,6 @@ class CartCheckoutController < ApplicationController
 
   def create_cart_item
     @cart_item = CartItem.create(cart_item_params)
-    redirect_to cart_checkout_index_url
-  end
-
-  def login_for_purchase
-    return if logged_in?
-    flash_ajax_message('Please login to continue purchase.')
+    redirect_to cart_checkout_index_path
   end
 end

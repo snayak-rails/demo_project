@@ -1,4 +1,9 @@
 $(document).ready(function() {
-  $('#purchase-form')
-    .html("<%= j (render partial: 'purchase_form') %>");
+  <% if flash[:notice] %>
+    $('#flash')
+      .html("<%= j(render partial: 'shared/flash') %>")
+  <% else %>
+    $('#purchase-form')
+      .html("<%= j(render partial: 'purchase_form') %>");
+  <% end %>
 });

@@ -5,4 +5,7 @@
     .html("Price: <%= j (number_to_currency(@cart_item.quantity + @product.price, unit: '$')) %>");
   $('#total-amount')
     .html("Total Amount: <%= j (number_to_currency(@cart.total_amount, unit: '$')) %>");
+<% else %>
+  $('#flash')
+      .html("<%= j(render partial: 'shared/flash') %>")
 <% end %>

@@ -19,6 +19,7 @@ class ProductsController < ApplicationController
       format.js do
         @products = Product.searched_items(params[:search])
         @products = @products.paginate(page: params[:page], per_page: 12)
+        flash.now[:notice] = 'No products found' if @products.blank?
       end
     end
   end
@@ -34,7 +35,7 @@ class ProductsController < ApplicationController
     @product = current_user.products.new(product_params)
     if @product.save
       add_product_images
-      flash[:notice] = 'Product added!'
+      flash[:success] = 'Product added!'
       redirect_to seller_dashboard_products_path
     else
       flash[:error] = @product.errors.full_messages.join('<br>')
@@ -48,7 +49,7 @@ class ProductsController < ApplicationController
     if @product.update_attributes(product_params)
       add_product_images
       remove_images
-      flash[:notice] = 'Product updated successfully!'
+      flash[:success] = 'Product updated successfully!'
       redirect_to seller_dashboard_products_path
     else
       flash[:error] = @product.errors.full_messages.join('<br>')
@@ -57,11 +58,8 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    if @product.destroy
-      flash[:notice] = 'Product removed'
-    else
-      flash[:error] = @product.errors.full_messages.join('<br>')
-    end
+    @product.destroy
+    flash[:success] = 'Product removed successfully!'
     redirect_to seller_dashboard_products_path
   end
 

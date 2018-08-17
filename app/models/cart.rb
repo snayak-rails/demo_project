@@ -5,6 +5,11 @@ class Cart < ApplicationRecord
   belongs_to :user
   has_many :cart_items, dependent: :destroy
 
+  scope :active_cart, lambda { |user_id|
+    where('user_id = ? AND is_paid = ?', user_id, false).take
+  }
+  scope :paid_carts, -> { where('is_paid = ?', true) }
+
   validates :name, presence: true, length: { maximum: 50 }
   validates :contact, presence: true, numericality: true, length: { minimum: 10 }
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
