@@ -7,28 +7,18 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def start
-    redirect_to products_url
+    redirect_to products_path
   end
 
   def authorize_user
     return if logged_in?
     flash[:notice] = 'You need to login for this action.'
-    redirect_to products_url
+    redirect_to products_path
   end
 
   def not_found
     raise ActionController::RoutingError.new('Not Found')
   rescue ActionController::RoutingError
     render file: 'public/404', status: 404
-  end
-
-  def flash_ajax_message(message)
-    flash.now[:notice] = message
-    render file: 'shared/flash.js.erb'
-  end
-
-  def flash_ajax_error(message)
-    flash.now[:notice] = message
-    render file: 'shared/flash_error.js.erb'
   end
 end

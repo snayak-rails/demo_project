@@ -38,9 +38,7 @@ module SessionsHelper
 
   def current_cart
     if logged_in?
-      @cart = Cart.where(
-        'user_id = ? AND is_paid = ?', current_user.id, false
-      ).take
+      @cart = Cart.active_cart(current_user.id).take
     else
       current_temp_cart
     end

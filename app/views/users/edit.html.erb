@@ -4,4 +4,9 @@
   <% provide(:button_text, "Save Changes") %>
 
   <%= render partial: 'form' %>
+
+  <%= link_to "Delete Account", user_path(@user.id),
+      class: "btn btn-danger",
+      :id => "delete-product-button", :method => :delete,
+      data: { confirm: 'Are you sure?' } %>
 </div>

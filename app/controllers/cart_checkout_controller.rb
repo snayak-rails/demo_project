@@ -8,7 +8,8 @@ class CartCheckoutController < ApplicationController
   before_action :fetch_cart, except: %i[order_history]
   before_action :authorize_user, only: %i[order_history]
   before_action :fetch_cart_item,
-                only: %i[increment_cart_item_quantity decrement_cart_item_quantity destroy_cart_item]
+                only: %i[increment_cart_item_quantity decrement_cart_item_quantity
+                         destroy_cart_item]
   before_action :stock_available?, only: %i[add_to_cart]
   before_action :cart_items_in_stock?, only: %i[update]
 

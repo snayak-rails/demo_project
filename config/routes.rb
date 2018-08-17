@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'application#start'
 
-  resources :users, except: %i[index show]
+  resources :users
   resources :products do
     collection do
       get :seller_dashboard

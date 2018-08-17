@@ -14,11 +14,11 @@ class SessionsController < ApplicationController
     else
       flash[:error] = 'Enter correct email and password.'
     end
-    redirect_to products_url
+    redirect_to products_path
   end
 
   def destroy
     log_out if logged_in?
-    redirect_to products_url
+    redirect_to products_path
   end
 end

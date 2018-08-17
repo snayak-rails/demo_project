@@ -11,7 +11,7 @@
 
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
         <a class="navbar-brand" href="<%= products_url %>">Shopping Cart</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
           data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +19,17 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
+          <% if params[:controller] == 'products' && params[:action] == 'index' %>
+            <%= form_tag products_path, method: :get, remote: true,
+                class: "form-inline my-2 my-lg-0" do %>
+              <%= text_field_tag :search, nil, required: true,
+               class: "form-control mr-sm-2",
+                  placeholder: "Name or Category",
+                   'aria-label': "Search" %>
+              <%= submit_tag 'Search Products', class: "btn btn-outline-success my-2 my-sm-0" %>
+            <% end %>
+          <% end %>
+          <ul class="navbar-nav ml-auto">
             <% unless current_user.present? %>
               <li class="nav-item">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login-modal">
@@ -58,15 +68,6 @@
                 <% end %>
             </li>
           </ul>
-          <% if params[:controller] == 'products' && params[:action] == 'index' %>
-            <%= form_tag products_path, method: :get, remote: true,
-                class: "form-inline my-2 my-lg-0" do %>
-              <%= text_field_tag :search, nil, required: true,
-               class: "form-control mr-sm-2",
-                  placeholder: "Search", 'aria-label': "Search" %>
-              <%= submit_tag 'Search', class: "btn btn-outline-success my-2 my-sm-0" %>
-            <% end %>
-          <% end %>
         </div>
       </nav>
 

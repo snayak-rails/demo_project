@@ -19,11 +19,11 @@ class UsersController < ApplicationController
       if @user.role == Constants::ROLE_SELLER
         redirect_to seller_dashboard_products_url
       else
-        redirect_to products_url
+        redirect_to products_path
       end
     else
       flash[:error] = @user.errors.full_messages.join('<br>')
-      redirect_to new_user_url
+      redirect_to new_user_path
     end
   end
 
@@ -33,11 +33,18 @@ class UsersController < ApplicationController
 
   def update
     if @user.update_attributes(user_params)
-      redirect_to products_url
+      redirect_to products_path
     else
       flash[:error] = @user.errors.full_messages.join('<br>')
-      redirect_to edit_user_url(@user.id)
+      redirect_to edit_user_path(@user.id)
     end
+  end
+
+  def destroy
+    @user.destroy
+    log_out
+    flash[:success] = 'Your account has been deleted.'
+    redirect_to products_path
   end
 
   private
@@ -54,6 +61,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound => e
     flash[:notice] = e.message
-    redirect_to products_url
+    redirect_to products_path
   end
 end
