@@ -52,17 +52,11 @@ class CartCheckoutController < ApplicationController
   def update_cart_item_quantity; end
 
   def increment_cart_item_quantity
-    update_succeeded = @cart_item.update(quantity: @cart_item.quantity + 1)
-    message = @cart_item.errors.full_messages.join('<br>')
-    flash[:error] = message unless update_succeeded
-    render :update_cart_item_quantity
+    update_quantity(@cart_item.quantity + 1)
   end
 
   def decrement_cart_item_quantity
-    update_succeeded = @cart_item.update(quantity: @cart_item.quantity - 1)
-    message = @cart_item.errors.full_messages.join('<br>')
-    flash[:error] = message unless update_succeeded
-    render :update_cart_item_quantity
+    update_quantity(@cart_item.quantity - 1)
   end
 
   def destroy_cart_item
@@ -128,5 +122,12 @@ class CartCheckoutController < ApplicationController
   def create_cart_item
     @cart_item = CartItem.create(cart_item_params)
     redirect_to cart_checkout_index_path
+  end
+
+  def update_quantity(quantity)
+    update_succeeded = @cart_item.update(quantity: quantity)
+    message = @cart_item.errors.full_messages.join('<br>')
+    flash.now[:error] = message unless update_succeeded
+    render :update_cart_item_quantity
   end
 end

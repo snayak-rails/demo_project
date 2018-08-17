@@ -1,4 +1,6 @@
 <% if @cart_item.errors.blank? %>
+  $('#flash')
+      .html("")
   $("#" + "<%= @cart_item.id %>")
     .html("Quantity: <%= j (@cart_item.quantity.to_s) %>");
   $("#" + "<%= @cart_item.id %>-price")
