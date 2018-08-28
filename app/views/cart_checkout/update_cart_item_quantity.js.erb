@@ -4,7 +4,7 @@
   $("#" + "<%= @cart_item.id %>")
     .html("Quantity: <%= j (@cart_item.quantity.to_s) %>");
   $("#" + "<%= @cart_item.id %>-price")
-    .html("Price: <%= j (number_to_currency(@cart_item.quantity + @product.price, unit: '$')) %>");
+    .html("Price: <%= j (number_to_currency(@cart_item.quantity * @product.price, unit: '$')) %>");
   $('#total-amount')
     .html("Total Amount: <%= j (number_to_currency(@cart.total_amount, unit: '$')) %>");
 <% else %>
